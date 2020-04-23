@@ -4,6 +4,7 @@ const path = require('path')
 
 module.exports = function(env) {
   return {
+    mode: 'production',
     entry: path.join(__dirname, 'src/index.js'),
     output: {
       path: (env && env.dist) || path.join(__dirname, 'dist'),
