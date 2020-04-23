@@ -1,0 +1,20 @@
+{
+  "name": "consys",
+  "version": "1.0.0",
+  "description": "csy framework utils for react",
+  "main": "webpack.config.js",
+  "scripts": {
+    "build": "bash ./deploy.sh",
+    "start": "webpack --mode development"
+  },
+  "author": "suporte@consystec.com.br",
+  "license": "ISC",
+  "devDependencies": {
+    "copy-webpack-plugin": "^5.1.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {
+    "xml2js": "^0.4.19"
+  }
+}
