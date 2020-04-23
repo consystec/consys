@@ -20,7 +20,7 @@ echo "Removing existing files"
 rm -rf release/dist/*
 
 echo "Generating dist"
-./node_modules/.bin/webpack
+./node_modules/.bin/webpack --mode production
 
 echo "Updating dist branch"
 cd dist && git add --all && git commit -m "Publishing to dist (publish.sh)" && git push origin release/dist
