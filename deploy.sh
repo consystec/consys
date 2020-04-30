@@ -11,16 +11,16 @@ echo "Deleting old publication"
 rm -rf dist
 mkdir dist
 git worktree prune
-rm -rf .git/worktrees/release/dist
+rm -rf .git/worktrees/dist
 
 echo "Checking out dist branch into dist"
-git worktree add -B dist dist origin/release/dist
+git worktree add -B dist dist origin/dist
 
 echo "Removing existing files"
-rm -rf release/dist/*
+rm -rf dist/*
 
 echo "Generating dist"
 ./node_modules/.bin/webpack --mode production
 
 echo "Updating dist branch"
-cd dist && git add --all && git commit -m "Publishing to dist (publish.sh)" && git push origin release/dist
+cd dist && git add --all && git commit -m "Publishing to dist (publish.sh)" && git push origin dist
