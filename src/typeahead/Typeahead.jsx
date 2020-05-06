@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { AutoComplete, Input, Row, Col } from 'antd';
-import { DownOutlined, LoadingOutlined } from '@ant-design/icons';
+import { DownOutlined, LoadingOutlined, CloseOutlined } from '@ant-design/icons';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import http from 'consys/http';
@@ -17,7 +17,8 @@ class Typeahead extends Component {
     this.state = {
       dataSource: [],
       showArrow: true,
-      blured: false
+      blured: false,
+      erasable: true
     };
 
     this.handleSearch = this.handleSearch.bind(this);
@@ -154,7 +155,7 @@ class Typeahead extends Component {
   }
 
   componentDidMount() {
-    const { onSearchReady, showArrow } = this.props;
+    const { onSearchReady, showArrow, erasable } = this.props;
     let searchProps = this.createSearch();
     let tempValue = TYPEAHEAD_NO_VALUE;
 
@@ -170,7 +171,8 @@ class Typeahead extends Component {
 
     this.setState({
       tempValue,
-      showArrow: typeof showArrow === 'undefined' ? true : showArrow
+      showArrow: typeof showArrow === 'undefined' ? true : showArrow,
+      erasable: typeof erasable === 'undefined' ? true : erasable
     });
 
     var node = ReactDOM.findDOMNode(this.autoComplete.current);
@@ -186,7 +188,7 @@ class Typeahead extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { showArrow } = this.props;
+    const { showArrow, erasable } = this.props;
     let tempValue = TYPEAHEAD_NO_VALUE;
 
     if (tempValue !== nextProps.value) {
@@ -197,6 +199,10 @@ class Typeahead extends Component {
 
     if (nextProps.showArrow != showArrow) {
       this.setState({ showArrow: nextProps.showArrow });
+    }
+
+    if (nextProps.erasable != erasable) {
+      this.setState({ erasable: nextProps.erasable });
     }
   }
 
@@ -241,16 +247,16 @@ class Typeahead extends Component {
 
   render() {
     const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup } = this.props;
-    const { loading, showArrow, blured, tempValue, value, dataSource } = this.state;
+    const { loading, showArrow, erasable, blured, tempValue, value, dataSource } = this.state;
     const props = { ...this.props };
+    const marginLeft = -8;
+    const marginTop = -10;
+    var suffix = null;
+    var LookupButton = null;
     delete props.onChange;
     delete props.defaultValue;
     delete props.setRef;
     delete props.view;
-    var suffix = null;
-    var LookupButton = null;
-    let marginLeft = 0;
-    let marginTop = 0;
 
     if (lookup) {
       if (typeof lookup === 'string') {
@@ -270,15 +276,16 @@ class Typeahead extends Component {
         );
         LookupButton = lookupWithProps;
       }
-      marginLeft = -22;
-      marginTop = -10;
-    } else {
-      marginLeft = -8;
-      marginTop = -10;
     }
 
     suffix = (
       <div>
+        {erasable && (value && value != "") ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
+          style={{ marginLeft: marginLeft - 16, marginTop }}>
+          <CloseOutlined style={{ fontSize: 11 }}
+            onClick={() => { this.handleSelect(null); this.setState({ blured: true }) }} />
+        </div>
+          : null}
         {showArrow ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
           style={{ marginLeft, marginTop }}>
           {loading ?
