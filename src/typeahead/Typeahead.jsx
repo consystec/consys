@@ -31,6 +31,8 @@ class Typeahead extends Component {
     this.createSearch = this.createSearch.bind(this);
     this.goSearch = this.goSearch.bind(this);
     this.view = this.view.bind(this);
+    this.autoComplete = React.createRef();
+    this.inputRef = React.createRef();
   }
 
   renderOption(item, index) {
@@ -171,7 +173,8 @@ class Typeahead extends Component {
       showArrow: typeof showArrow === 'undefined' ? true : showArrow
     });
 
-    var node = ReactDOM.findDOMNode(this.refs.autoComplete);
+    var node = ReactDOM.findDOMNode(this.autoComplete.current);
+
     if (!node || node.offsetWidth == 0) {
       this.setState({
         style: {
@@ -228,6 +231,14 @@ class Typeahead extends Component {
     }
   }
 
+  focus() {
+    if (this.autoComplete.current && this.autoComplete.current.focus) {
+      this.autoComplete.current.focus();
+    } else if (this.inputRef.current && this.inputRef.current.focus) {
+      this.inputRef.current.focus();
+    }
+  }
+
   render() {
     const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup } = this.props;
     const { loading, showArrow, blured, tempValue, value, dataSource } = this.state;
@@ -262,8 +273,8 @@ class Typeahead extends Component {
       marginLeft = -22;
       marginTop = -10;
     } else {
-      marginLeft = -14;
-      marginTop = 0;
+      marginLeft = -8;
+      marginTop = -10;
     }
 
     suffix = (
@@ -294,7 +305,7 @@ class Typeahead extends Component {
           <Col md={colTypeahead ? colTypeahead : (lookup != null ? 20 : 24)}
             xs={colTypeahead ? colTypeahead : (lookup != null ? 19 : 24)}>
             <AutoComplete {...props}
-              ref="autoComplete"
+              ref={this.autoComplete}
               value={value}
               ref={this.props.setRef}
               className={[style.typeahead, utilsCss.leftAlign].join(' ')}
@@ -306,7 +317,7 @@ class Typeahead extends Component {
               onBlur={this.handleBlur}
               onFocus={this.handleFocus}
               placeholder={placeholder ? placeholder : "Selecione"}>
-              <Input ref="input" suffix={suffix} {...props.autoFocus} />
+              <Input ref={this.inputRef} suffix={suffix} {...props.autoFocus} />
             </AutoComplete>
           </Col>
           {lookup != null ?
