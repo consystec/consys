@@ -142,7 +142,6 @@ function http(url, options = {}) {
 
             if (res.ok == false) {
               if (res.status == 401 || res.status == 408) {
-                oldMessage = result.message;
                 message.error(result.message);
                 auth.userChange(null);
               }
