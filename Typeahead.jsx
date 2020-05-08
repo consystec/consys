@@ -129,6 +129,10 @@ class Typeahead extends Component {
     const { onSearch, onResult } = this.props;
     let searchProps = this.createSearch();
     const proms = searchProps(value);
+    
+    if (this.state.blured) {
+      this.setState({ blured: false })
+    }
 
     if (proms) {
       proms
@@ -281,12 +285,11 @@ class Typeahead extends Component {
     suffix = (
       <div>
         {erasable && (value && value != "") ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
-          style={{ marginLeft: marginLeft - 16, marginTop }}>
+          style={{ marginLeft: marginLeft, marginTop }}>
           <CloseOutlined style={{ fontSize: 11 }}
-            onClick={() => { this.handleSelect(null); this.setState({ blured: true }) }} />
+            onClick={() => { this.handleSelect(null); this.setState({ blured: true, loading: true, dataSource: [] }); this.search('') }} />
         </div>
-          : null}
-        {showArrow ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
+      : showArrow ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
           style={{ marginLeft, marginTop }}>
           {loading ?
             <LoadingOutlined style={{ fontSize: 11 }} />
@@ -312,6 +315,7 @@ class Typeahead extends Component {
           <Col md={colTypeahead ? colTypeahead : (lookup != null ? 20 : 24)}
             xs={colTypeahead ? colTypeahead : (lookup != null ? 19 : 24)}>
             <AutoComplete {...props}
+              defaultActiveFirstOption
               ref={this.autoComplete}
               value={value}
               ref={this.props.setRef}
