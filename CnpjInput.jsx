@@ -3,16 +3,18 @@ import MaskInput from 'consys/MaskInput';
 import StringMask from 'string-mask';
 const cnpjPattern = new StringMask('00.000.000/0000-00');
 
-function validateCnpj(_, value, callback) {
-  if (value) {
-    if (!handleValidateCNPJ(value)) {
-      callback("Esse CNPJ é inválido");
+function validateCnpj(_, value) {
+  return new Promise((resolve, reject) => {
+    if (value) {
+      if (!handleValidateCNPJ(value)) {
+        reject("Esse CNPJ é inválido");
+      } else {
+        resolve();
+      }
     } else {
-      callback();
+      resolve()
     }
-  } else {
-    callback();
-  }
+  })
 }
 
 function handleValidateCNPJ(cnpj) {
@@ -77,11 +79,7 @@ function handleValidateCNPJ(cnpj) {
 
 class CnpjInput extends Component {
   render() {
-    const {
-      format,
-      clearValue,
-      ...rest
-    } = this.props;
+    const { format, clearValue, ...rest } = this.props;
 
     return (
       <MaskInput
