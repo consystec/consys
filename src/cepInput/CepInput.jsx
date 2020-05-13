@@ -11,8 +11,7 @@ class CepInput extends Component {
       ...rest
     } = this.props;
     return (
-      <MaskInput 
-        {...rest}
+      <MaskInput {...rest}
         clearValue={(rawValue) => rawValue.toString().replace(/[^0-9]/g, '').slice(0, 8)}
         format={(cleanValue) => (cepMask.apply(cleanValue) || '').replace(/[^0-9]$/, '')} />
     );
