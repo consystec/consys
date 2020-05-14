@@ -3,11 +3,12 @@ import { Modal } from 'antd';
 
 function NewModal({visible, children, ...rest}) {
   return(
-    visible &&
+    visible ?
       <Modal visible
         {...rest}>
         {children}
       </Modal>
+    : null
   );
 }
 
