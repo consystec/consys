@@ -6,68 +6,47 @@ import PropTypes from 'prop-types';
 const cnpjPattern = new StringMask('00.000.000\/0000-00');
 const cpfPattern = new StringMask('000.000.000-00');
 
-class CpfCnpjInput extends Component {
-  constructor(){
-    super();
-    this.format = this.format.bind(this);
-  }
+const CpfCnpjInput = React.forwardRef(({ format, clearValue, type, ...rest }, ref) => {
+  let size = type && type.toUpperCase() == 'CPF' ? 11 : 14;
 
-  format(cleanValue){
-    const {type} = this.props;
+  const formatInput = cleanValue => {
     var formatedValue;
 
-    if (typeof cleanValue == 'undefined'){
+    if (typeof cleanValue == 'undefined'
+      || cleanValue == 'null'
+      || cleanValue == null
+      || (cleanValue != null && cleanValue.trim() === '')) {
       return;
     }
 
     if (type) {
       if (type.toUpperCase() == 'CNPJ') {
         formatedValue = cnpjPattern.apply(cleanValue);
-      } 
+      }
       if (type.toUpperCase() == 'CPF') {
         formatedValue = cpfPattern.apply(cleanValue) || '';
       }
-    }
-    else {
+    } else {
       if (cleanValue.length > 11) {
         formatedValue = cnpjPattern.apply(cleanValue);
       } else {
         formatedValue = cpfPattern.apply(cleanValue) || '';
       }
-    } 
-    
-    // if ((typeof type !== 'undefined' && type.toUpperCase() == 'CNPJ') || cleanValue.length > 11) {
-    //   formatedValue = cnpjPattern.apply(cleanValue);
-    // } else if ((typeof type !== 'undefined' && type.toUpperCase() == 'CPF') || cleanValue.length <= 11) {
-    //   formatedValue = cpfPattern.apply(cleanValue) || '';
-    // }
+    }
 
     return formatedValue.trim().replace(/[^0-9]$/, '');
   }
 
-  render() {
-    const {
-      format,
-      clearValue,
-      type,
-      ...rest
-    } = this.props;
-    let size = 14;
-
-    if (type && type.toUpperCase() == 'CPF') {
-      size = 11;
-    }
-
-    return (
-      <MaskInput 
-        {...rest}
-        clearValue={(rawValue) => rawValue.replace(/[^\d]/g, '').slice(0, size)}
-        format={(cleanValue) => this.format(cleanValue)}/>
-    );
-  }
-}
+  return (
+    <MaskInput {...rest}
+      ref={ref}
+      clearValue={rawValue => rawValue && rawValue.replace(/[^\d]/g, '').slice(0, size)}
+      format={cleanValue => formatInput(cleanValue)} />
+  );
+});
 
 CpfCnpjInput.propTypes = {
   type: PropTypes.string
-};
+}
+
 export default CpfCnpjInput;
