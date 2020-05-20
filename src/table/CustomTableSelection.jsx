@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Table, Row, Col, Button, notification }  from 'antd'; 
+import { Table, Row, Col, Button, notification } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import Lookup from 'consys/Lookup';
 import utilsCss from 'consys/utils.css';
@@ -10,24 +11,24 @@ const sizeScreen = screenSize();
 class CustomTableSelection extends Component {
   constructor() {
     super();
-    this.state = {selectedRowKeys: []};
+    this.state = { selectedRowKeys: [] };
     this.onSelectChange = this.onSelectChange.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setState({ data: this.props.data });
   }
 
-  onSelectChange(selectedRowKeys){
+  onSelectChange(selectedRowKeys) {
     this.setState({ selectedRowKeys });
   }
 
-  handleDelete(){
+  handleDelete() {
     var { selectedRowKeys, data } = this.state;
-    
-    if (selectedRowKeys.length == data.length){
+
+    if (selectedRowKeys.length == data.length) {
       data = [];
     }
     else {
@@ -36,23 +37,23 @@ class CustomTableSelection extends Component {
       }
     }
 
-    this.setState({selectedRowKeys: [], data});
+    this.setState({ selectedRowKeys: [], data });
     this.props.onDelete && this.props.onDelete(data);
   }
 
-  handleSelect(value){
-    let {data} = this.state;
+  handleSelect(value) {
+    let { data } = this.state;
     var repetido = false;
 
     for (var i = 0; i < data.length; i++) {
-      if (data[i].id == value.id){
+      if (data[i].id == value.id) {
         repetido = true;
       }
     }
 
-    if (!repetido){
+    if (!repetido) {
       data.push(value);
-      this.setState({data});
+      this.setState({ data });
     }
     else {
       notification.warning({
@@ -63,7 +64,7 @@ class CustomTableSelection extends Component {
   }
 
   render() {
-    const {selectedRowKeys} = this.state;
+    const { selectedRowKeys } = this.state;
 
     return (
       <Row>
@@ -86,9 +87,9 @@ class CustomTableSelection extends Component {
                 onSelect={this.handleSelect}>
                 Inserir {sizeScreen == 'xs' || sizeScreen == 'sm' ? null : 'novo'}
               </Lookup>
-             : this.props.children}
-            <Button type="danger" 
-              icon="delete"
+              : this.props.children}
+            <Button type="danger"
+              icon={<DeleteOutlined />}
               disabled={!selectedRowKeys.length}
               className={utilsCss.ml2}
               onClick={this.handleDelete}>
@@ -99,12 +100,12 @@ class CustomTableSelection extends Component {
         <Row>
           <Table columns={this.props.columns}
             size="middle"
-            rowSelection={{selectedRowKeys, onChange: this.onSelectChange}}
+            rowSelection={{ selectedRowKeys, onChange: this.onSelectChange }}
             pagination={false}
-            {...(sizeScreen == 'xs' || sizeScreen == 'sm' ? {scroll: {x: true}, style: {whiteSpace: 'nowrap'}} : null)}
+            {...(sizeScreen == 'xs' || sizeScreen == 'sm' ? { scroll: { x: true }, style: { whiteSpace: 'nowrap' } } : null)}
             bordered={false}
             rowKey={(record, index) => index}
-            dataSource={this.state.data}/>
+            dataSource={this.state.data} />
         </Row>
       </Row>
     );
