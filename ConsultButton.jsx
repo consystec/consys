@@ -1,20 +1,21 @@
 import React, { Component } from 'react';
-import {Button, Tooltip} from 'antd';
+import { Button, Tooltip } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
 class ConsultButton extends Component {
   render() {
-    const {onConsult, children, tooltip} = this.props;
-    const props = {...this.props};
+    const { onConsult, children, tooltip } = this.props;
+    const props = { ...this.props };
     delete props.onConsult;
     delete props.tooltip;
     return (
       <Tooltip title={tooltip ? "Consultar" : ''}>
         <Button {...props}
-          icon="search"
+          icon={<SearchOutlined />}
           onClick={onConsult ? onConsult : null}>
           {children}
-        </Button> 
+        </Button>
       </Tooltip>
     );
   }

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Modal, message} from 'antd';
+import { Modal, message as messageAntd } from 'antd';
 import http from 'consys/http';
 
 let dataUtils = (Component) => {
@@ -8,29 +8,25 @@ let dataUtils = (Component) => {
   class DataUtilsComponent extends Component {
     constructor() {
       super();
+
       this.close = this.close.bind(this);
       this.del = this.del.bind(this);
     }
-    del(index, config){
-      const {state} = this.wrappedInstance;
-      const {data} = state;
-      if (typeof data === 'undefined')
-      {
+
+    del(index, config) {
+      const { state } = this.wrappedInstance;
+      const { data } = state;
+      if (typeof data === 'undefined') {
         return;
       }
-      if (typeof config === 'undefined')
-      {
+
+      if (typeof config === 'undefined') {
         data.splice(index, 1);
-        this.setState({data});
+        this.setState({ data });
         return;
       }
-      const {
-        url, 
-        params,
-        body,
-        message,
-        method
-      } = config;
+
+      const { url, params, body, message, method, onSuccess } = config;
 
       http(url, {
         method: method || 'DELETE',
@@ -38,13 +34,11 @@ let dataUtils = (Component) => {
         body
       }).then(() => {
         data.splice(index, 1);
-        this.setState({data});
-        message.success(
-          message, 3
-        );
-      }).catch(({message, ...rest}) => {
-        if (message)
-        {
+        this.setState({ data });
+        messageAntd.success(message, 3);
+        onSuccess && onSuccess();
+      }).catch(({ message }) => {
+        if (message) {
           Modal.error({
             title: 'Erro ao excluir',
             content: message
@@ -52,43 +46,47 @@ let dataUtils = (Component) => {
         }
       });
     }
-    close(res, index){
-      const {state} = this.wrappedInstance;
-      const {data} = state;
-      if (typeof data === 'undefined')
-      {
+
+    close(res, index) {
+      const { state } = this.wrappedInstance;
+      const { data } = state;
+
+      if (typeof data === 'undefined') {
         return;
       }
-      if (res){
-        if (typeof index !== 'undefined' && index !== null){
+
+      if (res) {
+        if (typeof index !== 'undefined' && index !== null) {
           data[index] = res;
         }
         else {
           data.unshift(res);
         }
-        this.setState({data});
+        this.setState({ data });
       }
-    }   
-    componentDidMount(){
-      const {form} = this.props;
-      const {state} = this.wrappedInstance;
+    }
+
+    componentDidMount() {
+      const { form } = this.props;
+      const { state } = this.wrappedInstance;
+
       if (state) {
-        const {values, data} = state;
+        const { values } = state;
+
         if (values) {
-          if (typeof form == 'undefined')
-          {
+          if (typeof form == 'undefined') {
             throw 'componente sem o HOC Form.create()';
-          }
-          else
-          {
-            form.setFieldsValue(values);     
+          } else {
+            form.setFieldsValue(values);
           }
         }
       }
     }
+
     ref(wrappedInstance) {
       this.wrappedInstance = wrappedInstance;
     }
+
     render() {
       const dataUtilsProps = {
         dataUtils: {
@@ -96,10 +94,14 @@ let dataUtils = (Component) => {
           del: this.del
         }
       }
+
       return <Component {...this.props} {...dataUtilsProps} ref={this.ref.bind(this)} />
     }
   }
+
   DataUtilsComponent.displayName = name;
+
   return DataUtilsComponent;
 };
+
 export default dataUtils;
