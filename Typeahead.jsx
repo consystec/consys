@@ -8,7 +8,6 @@ import style from 'consys/typeahead.css';
 import utilsCss from 'consys/utils.css';
 import Lookup from 'consys/Lookup';
 
-const Option = AutoComplete.Option;
 const TYPEAHEAD_NO_VALUE = 'TYPEAHEAD_NO_VALUE';
 
 class Typeahead extends Component {
@@ -98,7 +97,7 @@ class Typeahead extends Component {
   }
 
   createSearch() {
-    const { method } = this.props;
+    const { method, params } = this.props;
     let searchProps = this.props.search;
 
     if (typeof searchProps === 'undefined') {
@@ -110,18 +109,19 @@ class Typeahead extends Component {
         if (method !== 'GET') {
           objParams = {
             ...objParams,
-            body: { descricao: value }
+            body: { ...params, descricao: value }
           };
         } else {
           objParams = {
             ...objParams,
-            params: { descricao: value }
+            params: { ...params, descricao: value }
           };
         }
 
         return http(this.props.url, objParams);
       }
     }
+
     return searchProps;
   }
 
@@ -129,7 +129,7 @@ class Typeahead extends Component {
     const { onSearch, onResult } = this.props;
     let searchProps = this.createSearch();
     const proms = searchProps(value);
-    
+
     if (this.state.blured) {
       this.setState({ blured: false })
     }
@@ -289,14 +289,14 @@ class Typeahead extends Component {
           <CloseOutlined style={{ fontSize: 11 }}
             onClick={() => { this.handleSelect(null); this.setState({ blured: true, loading: true, dataSource: [] }); this.search('') }} />
         </div>
-      : showArrow ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
-          style={{ marginLeft, marginTop }}>
-          {loading ?
-            <LoadingOutlined style={{ fontSize: 11 }} />
-            :
-            <DownOutlined style={{ fontSize: 11 }} />
-          }
-        </div> : null}
+          : showArrow ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
+            style={{ marginLeft, marginTop }}>
+            {loading ?
+              <LoadingOutlined style={{ fontSize: 11 }} />
+              :
+              <DownOutlined style={{ fontSize: 11 }} />
+            }
+          </div> : null}
       </div>
     )
 
@@ -360,6 +360,7 @@ Typeahead.propTypes = {
   onSearch: PropTypes.func,
   onSearchReady: PropTypes.func,
   method: PropTypes.string,
+  params: PropTypes.object,
   colTypeahead: PropTypes.number,
   colLookup: PropTypes.number,
   placeholder: PropTypes.string,
