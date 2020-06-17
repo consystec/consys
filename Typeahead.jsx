@@ -253,8 +253,7 @@ class Typeahead extends Component {
     const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup } = this.props;
     const { loading, showArrow, erasable, blured, tempValue, value, dataSource } = this.state;
     const props = { ...this.props };
-    const marginLeft = -8;
-    const marginTop = -10;
+    const marginLeft = -3;
     var suffix = null;
     var LookupButton = null;
     delete props.onChange;
@@ -285,12 +284,12 @@ class Typeahead extends Component {
     suffix = (
       <div>
         {erasable && (value && value != "") ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
-          style={{ marginLeft: marginLeft, marginTop }}>
+          style={{ marginLeft }}>
           <CloseOutlined style={{ fontSize: 11 }}
             onClick={() => { this.handleSelect(null); this.setState({ blured: true, loading: true, dataSource: [] }); this.search('') }} />
         </div>
           : showArrow ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
-            style={{ marginLeft, marginTop }}>
+            style={{ marginLeft }}>
             {loading ?
               <LoadingOutlined style={{ fontSize: 11 }} />
               :
