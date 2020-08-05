@@ -254,6 +254,7 @@ class Typeahead extends Component {
     const { loading, showArrow, erasable, blured, tempValue, value, dataSource } = this.state;
     const props = { ...this.props };
     const marginLeft = -3;
+    const marginTop = -10;
     var suffix = null;
     var LookupButton = null;
     delete props.onChange;
@@ -284,12 +285,12 @@ class Typeahead extends Component {
     suffix = (
       <div>
         {erasable && (value && value != "") ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
-          style={{ marginLeft }}>
+          style={{ marginLeft, marginTop }}>
           <CloseOutlined style={{ fontSize: 11 }}
             onClick={() => { this.handleSelect(null); this.setState({ blured: true, loading: true, dataSource: [] }); this.search('') }} />
         </div>
           : showArrow ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
-            style={{ marginLeft }}>
+            style={{ marginLeft, marginTop }}>
             {loading ?
               <LoadingOutlined style={{ fontSize: 11 }} />
               :

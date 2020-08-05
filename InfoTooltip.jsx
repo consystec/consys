@@ -29,8 +29,8 @@ class InfoTooltip extends Component {
     }
 
     if (type == 'user') {
-      if (cadastro) {
-        const id = cadastro.id;
+      if (cadastro && cadastro.codigo) {
+        const id = cadastro.codigo;
         const nome = typeof cadastro.descricao !== 'undefined' ? cadastro.descricao : cadastro.nome;
 
         tituloCadastro = (
@@ -41,8 +41,8 @@ class InfoTooltip extends Component {
         );
       }
 
-      if (altera) {
-        const id = altera.id;
+      if (altera && altera.codigo) {
+        const id = altera.codigo;
         const nome = typeof altera.descricao !== 'undefined' ? altera.descricao : altera.nome;
 
         tituloAltera = (
@@ -78,6 +78,7 @@ InfoTooltip.propTypes = {
     PropTypes.number
   ]),
   altera: PropTypes.oneOfType([
+    PropTypes.string,
     PropTypes.object,
     PropTypes.instanceOf(Date),
     PropTypes.number
