@@ -6,7 +6,7 @@ class Currency extends Component {
     return (
       <ValueMaskInput ref={node => this.refs = node}
         {...this.props}
-        prefixMask="R$$ "/>
+        prefixMask="R$ "/>
     );
   }
 }
