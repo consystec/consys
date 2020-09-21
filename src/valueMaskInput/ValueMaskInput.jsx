@@ -61,7 +61,7 @@ class ValueMaskInput extends Component {
     valor = valor
       .replace('.', '')
       .replace(',', '');
-    const formatter = new StringMask((prefixMask || '') + '9999990,' + decimals + (suffixMask || ''), { reverse: true });
+    const formatter = new StringMask((prefixMask || '') + '#.##0,' + decimals + (suffixMask || ''), { reverse: true });
     const maskedValue = formatter.apply(valor);
 
     this.setState({ valor: maskedValue });
