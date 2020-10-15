@@ -15,7 +15,7 @@ class ValueMaskInput extends Component {
     this.handleEnter = this.handleEnter.bind(this);
   }
 
-  setValue(valor, activeChange) {
+  setValue(valor, activeChange, nextPrefixMask) {
     const { onChange, onBlurPure, max, min, prefixMask, suffixMask } = this.props;
     let { decimals } = this.props;
 
@@ -61,7 +61,7 @@ class ValueMaskInput extends Component {
     valor = valor
       .replace('.', '')
       .replace(',', '');
-    const formatter = new StringMask((prefixMask || '') + '#.##0,' + decimals + (suffixMask || ''), { reverse: true });
+    const formatter = new StringMask((nextPrefixMask || prefixMask || '') + '#.##0,' + decimals + (suffixMask || ''), { reverse: true });
     const maskedValue = formatter.apply(valor);
 
     this.setState({ valor: maskedValue });
@@ -113,10 +113,14 @@ class ValueMaskInput extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { value } = this.props;
+    const { value, prefixMask } = this.props;
 
     if (value !== nextProps.value) {
       this.setValue(nextProps.value);
+    }
+
+    if (prefixMask !== nextProps.prefixMask) {
+      this.setValue(value, false, nextProps.prefixMask);
     }
   }
 

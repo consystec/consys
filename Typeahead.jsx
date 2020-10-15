@@ -284,11 +284,17 @@ class Typeahead extends Component {
 
     suffix = (
       <div>
-        {erasable && (value && value != "") ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
-          style={{ marginLeft, marginTop }}>
-          <CloseOutlined style={{ fontSize: 11 }}
-            onClick={() => { this.handleSelect(null); this.setState({ blured: true, loading: true, dataSource: [] }); this.search('') }} />
-        </div>
+        {erasable && (value && value != "") ?
+          <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
+            style={{ marginLeft, marginTop }}>
+            <CloseOutlined style={{ fontSize: 11 }}
+              className={props.disabled && utilsCss.nopointer}
+              onClick={() => {
+                this.handleSelect(null);
+                this.setState({ blured: true, loading: true, dataSource: [] }); this.search('')
+              }
+              } />
+          </div>
           : showArrow ? <div className={[utilsCss.muted, utilsCss.absolute].join(' ')}
             style={{ marginLeft, marginTop }}>
             {loading ?

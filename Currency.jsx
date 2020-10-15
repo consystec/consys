@@ -1,14 +1,18 @@
-import React, { Component } from 'react';
+import React, { forwardRef } from 'react';
 import ValueMaskInput from 'consys/ValueMaskInput';
+import PropTypes from 'prop-types';
 
-class Currency extends Component {
-  render() {
-    return (
-      <ValueMaskInput ref={node => this.refs = node}
-        {...this.props}
-        prefixMask="R$ "/>
-    );
-  }
-}
+const Currency = forwardRef(({ simbolo, ...props }, ref) => {
+
+  return (
+    <ValueMaskInput ref={ref}
+      prefixMask={simbolo ? simbolo : "R$ "}
+      {...props} />
+  );
+})
+
+Currency.propTypes = {
+  simbolo: PropTypes.string
+};
 
 export default Currency;
