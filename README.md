@@ -94,6 +94,9 @@ npm start -- --env.dist=C:\Projetos\"projeto"\frontend\node_modules\consys
 ###FormattedCPF
 - componente que exibe o CPF formatado
 
+###FormattedCpfCnpj
+- componente que exibe o CPF ou CNPJ formatado
+
 ###FormattedCep
 - componente que exibe o Cep formatado
 
