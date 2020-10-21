@@ -326,7 +326,7 @@ class Typeahead extends Component {
               value={value}
               ref={this.props.setRef}
               className={[style.typeahead, utilsCss.leftAlign].join(' ')}
-              style={{ ...this.state.style, width: '100%' }}
+              style={{ ...this.state.style, ...this.props.style, width: '100%' }}
               dropdownmenustyle={{ maxHeight: 163 }}
               options={!blured ? dataSource && dataSource.map(this.renderOption) : []}
               onSelect={this.handleSelectAutoComplete}
