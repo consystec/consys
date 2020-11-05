@@ -43,7 +43,7 @@ class Lookup extends Component {
         } else {
           objParams = {
             ...objParams,
-            params: JSON.stringify(params)
+            params
           };
         }
         return http(url, objParams);
