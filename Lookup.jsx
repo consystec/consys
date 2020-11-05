@@ -21,6 +21,7 @@ class Lookup extends Component {
 
   search(params = { page: 1 }) {
     let searchProp = this.props.search;
+    const { method } = this.props;
 
     params = {
       filters: this.state.filters,
@@ -31,7 +32,7 @@ class Lookup extends Component {
     if (typeof searchProp == 'undefined') {
       searchProp = (url, params) => {
         return http(url, {
-          method: 'POST',
+          method: method ? method : 'POST',
           body: JSON.stringify(params)
         });
       }
@@ -143,7 +144,8 @@ Lookup.propTypes = {
   body: PropTypes.node,
   data: PropTypes.array,
   pagination: PropTypes.object,
-  shape: PropTypes.string
+  shape: PropTypes.string,
+  method: PropTypes.string,
 };
 
 export default Lookup;
