@@ -31,10 +31,22 @@ class Lookup extends Component {
 
     if (typeof searchProp == 'undefined') {
       searchProp = (url, params) => {
-        return http(url, {
-          method: method ? method : 'POST',
-          body: JSON.stringify(params)
-        });
+        let objParams = {
+          method: method ? method : 'POST'
+        };
+
+        if (method !== 'GET') {
+          objParams = {
+            ...objParams,
+            body: JSON.stringify(params)
+          };
+        } else {
+          objParams = {
+            ...objParams,
+            params: JSON.stringify(params)
+          };
+        }
+        return http(url, objParams);
       }
     }
 
