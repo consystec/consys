@@ -311,12 +311,14 @@ class Typeahead extends Component {
             columns={columns}
             rowKey={rowKey}
             onSelect={this.handleSelect}
+            disabled={props.disabled}
             url={lookup} />
         );
       } else {
         const lookupWithProps = React.Children.map(lookup,
           (child) => React.cloneElement(child, {
-            onSelect: this.handleSelect
+            onSelect: this.handleSelect,
+            disabled: props.disabled
           })
         );
         LookupButton = lookupWithProps;
