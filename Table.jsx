@@ -27,6 +27,8 @@ class _Table extends Component {
     this.props.fetch({
       results: pagination.pageSize,
       page: pagination.current,
+      pageSize: pagination.pageSize,
+      current: pagination.current,
       orderBy,
       ...filters,
     });

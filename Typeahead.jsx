@@ -10,6 +10,8 @@ import Lookup from 'consys/Lookup';
 
 const TYPEAHEAD_NO_VALUE = 'TYPEAHEAD_NO_VALUE';
 
+const map = {};
+
 class Typeahead extends Component {
   constructor() {
     super();
@@ -30,6 +32,8 @@ class Typeahead extends Component {
     this.typeaheadRef = this.typeaheadRef.bind(this);
     this.createSearch = this.createSearch.bind(this);
     this.goSearch = this.goSearch.bind(this);
+    this.keyPress = this.keyPress.bind(this);
+    this.keyUp = this.keyUp.bind(this);
     this.view = this.view.bind(this);
     this.autoComplete = React.createRef();
     this.inputRef = React.createRef();
@@ -249,6 +253,41 @@ class Typeahead extends Component {
     }
   }
 
+  keyPress(e) {
+    const { onPressTab, confirmTab } = this.props;
+    const { dataSource } = this.state;
+
+    if (this.inputRef.current) {
+      if (e.key === 'Shift' || e.key === 'Tab') {
+        map[e.keyCode] = e.type == 'keydown';
+      }
+
+      if (!map[16] && e.key === 'Tab' && (onPressTab || confirmTab)) {
+        let input = this.inputRef.current.input;
+        let aria = input.attributes[9].nodeValue;
+        let indexOf = aria.charAt(aria.length - 1);
+        let keys = Object.keys(input);
+        
+        if (!(keys && input[keys[1]] && input[keys[1]]['aria-expanded'])) {
+          return;
+        }
+
+        if (dataSource[indexOf]) {
+          this.handleSelect(dataSource[indexOf]);
+          onPressTab && onPressTab(dataSource[indexOf]);
+        } else {
+          this.handleBlur();
+        }
+      }
+    }
+  }
+
+  keyUp(e) {
+    if (e.key === 'Shift' || e.key === 'Tab') {
+      map[e.keyCode] = e.type == 'keydown';
+    }
+  }
+
   render() {
     const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup } = this.props;
     const { loading, showArrow, erasable, blured, tempValue, value, dataSource } = this.state;
@@ -261,6 +300,8 @@ class Typeahead extends Component {
     delete props.defaultValue;
     delete props.setRef;
     delete props.view;
+    delete props.onPressTab;
+    delete props.confirmTab;
 
     if (lookup) {
       if (typeof lookup === 'string') {
@@ -324,7 +365,6 @@ class Typeahead extends Component {
               defaultActiveFirstOption
               ref={this.autoComplete}
               value={value}
-              ref={this.props.setRef}
               className={[style.typeahead, utilsCss.leftAlign].join(' ')}
               style={{ ...this.state.style, ...this.props.style, width: '100%' }}
               dropdownmenustyle={{ maxHeight: 163 }}
@@ -333,8 +373,12 @@ class Typeahead extends Component {
               onSearch={this.handleSearch}
               onBlur={this.handleBlur}
               onFocus={this.handleFocus}
-              placeholder={placeholder ? placeholder : "Selecione"}>
-              <Input ref={this.inputRef} suffix={suffix} {...props.autoFocus} />
+              placeholder={placeholder ? placeholder : "Selecione"}
+              onKeyDown={this.keyPress}
+              onKeyUp={this.keyUp}>
+              <Input ref={this.inputRef}
+                suffix={suffix}
+                {...props.autoFocus} />
             </AutoComplete>
           </Col>
           {lookup != null ?
@@ -370,6 +414,8 @@ Typeahead.propTypes = {
   colTypeahead: PropTypes.number,
   colLookup: PropTypes.number,
   placeholder: PropTypes.string,
+  onPressTab: PropTypes.func,
+  confirmTab: PropTypes.bool
 };
 
 export default Typeahead;
