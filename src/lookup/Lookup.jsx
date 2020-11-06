@@ -19,7 +19,7 @@ class Lookup extends Component {
     this.search = this.search.bind(this);
   }
 
-  search(params = { page: 1 }) {
+  search(params = { pageSize: 10, current: 1 }, ) {
     let searchProp = this.props.search;
     const { method } = this.props;
 
@@ -53,7 +53,7 @@ class Lookup extends Component {
     this.setState({ loading: true });
     searchProp(this.props.url, params).then((data) => {
       const pagination = { ...this.state.pagination };
-      pagination.current = params.page;
+      pagination.current = params.current;
       pagination.total = data.totalElements;
       pagination.size = sizeScreen == 'xs' || sizeScreen == 'sm' ? "small" : "";
 
@@ -127,6 +127,7 @@ class Lookup extends Component {
             dataSource={this.state.data}
             {...(sizeScreen == 'xs' || sizeScreen == 'sm' ? { scroll: { x: true }, style: { whiteSpace: 'nowrap' } } : null)}
             pagination={this.state.pagination}
+            onChange={(page) => this.search(page)}
             loading={loading}
             size="midle"
             onRow={(record, rowIndex) => {
