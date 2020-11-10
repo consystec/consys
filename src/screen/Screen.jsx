@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 
 class Screen extends Component {
   render() {
+    const { padding, style } = this.props;
+
     return (
-      <Row type="flex" 
-        justify="space-around" 
+      <Row justify="space-around"
         align="middle">
-        <Col span={23} 
-          style={{padding: '16px'}}>
+        <Col span={23}
+          style={{ padding: padding || '16px', ...style }}>
           {this.props.children}
         </Col>
       </Row>
@@ -18,8 +19,9 @@ class Screen extends Component {
 }
 
 Screen.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
+  padding: PropTypes.any,
+  style: PropTypes.any
 };
-
 
 export default Screen;
