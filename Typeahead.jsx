@@ -129,7 +129,7 @@ class Typeahead extends Component {
     return searchProps;
   }
 
-  search(value) {
+  search(value, firstResult) {
     const { onSearch, onResult } = this.props;
     let searchProps = this.createSearch();
     const proms = searchProps(value);
@@ -147,6 +147,7 @@ class Typeahead extends Component {
           }
 
           onSearch && onSearch(res, value);
+          firstResult && firstResult(res[0]);
 
           this.setState({
             loading: false,
@@ -163,11 +164,15 @@ class Typeahead extends Component {
   }
 
   componentDidMount() {
-    const { onSearchReady, showArrow, erasable } = this.props;
+    const { onSearchReady, showArrow, erasable, firstResult } = this.props;
     let searchProps = this.createSearch();
     let tempValue = TYPEAHEAD_NO_VALUE;
 
     onSearchReady && onSearchReady(searchProps, this.search);
+
+    if (firstResult) {
+      this.search('', firstResult);
+    }
 
     if (typeof this.props.defaultValue !== 'undefined') {
       tempValue = this.props.defaultValue;
@@ -417,7 +422,8 @@ Typeahead.propTypes = {
   colLookup: PropTypes.number,
   placeholder: PropTypes.string,
   onPressTab: PropTypes.func,
-  confirmTab: PropTypes.bool
+  confirmTab: PropTypes.bool,
+  firstResult: PropTypes.func
 };
 
 export default Typeahead;
