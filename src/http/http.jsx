@@ -144,6 +144,10 @@ function http(url, options = {}) {
               if (res.status == 401 || res.status == 408) {
                 message.error(result.message);
                 auth.userChange(null);
+
+                if (result.redirect) {
+                  window.location.href = `${result.redirect}`;
+                }
               }
               throw result;
             }
