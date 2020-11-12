@@ -307,6 +307,7 @@ class Typeahead extends Component {
     delete props.view;
     delete props.onPressTab;
     delete props.confirmTab;
+    delete props.firstResult;
 
     if (lookup) {
       if (typeof lookup === 'string') {
