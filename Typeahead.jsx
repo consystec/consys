@@ -130,7 +130,7 @@ class Typeahead extends Component {
   }
 
   search(value, firstResult) {
-    const { onSearch, onResult } = this.props;
+    const { onSearch, onResult, defaults } = this.props;
     let searchProps = this.createSearch();
     const proms = searchProps(value);
 
@@ -148,6 +148,10 @@ class Typeahead extends Component {
 
           onSearch && onSearch(res, value);
           firstResult && firstResult(res[0]);
+
+          if (defaults && defaults.length > 0 && res && Array.isArray(res)) {
+            res = defaults.concat(res);
+          }
 
           this.setState({
             loading: false,
@@ -272,7 +276,7 @@ class Typeahead extends Component {
         let aria = input.attributes[9].nodeValue;
         let indexOf = aria.charAt(aria.length - 1);
         let keys = Object.keys(input);
-        
+
         if (!(keys && input[keys[1]] && input[keys[1]]['aria-expanded'])) {
           return;
         }
@@ -308,6 +312,7 @@ class Typeahead extends Component {
     delete props.onPressTab;
     delete props.confirmTab;
     delete props.firstResult;
+    delete props.defaults;
 
     if (lookup) {
       if (typeof lookup === 'string') {
