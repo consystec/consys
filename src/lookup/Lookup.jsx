@@ -21,7 +21,7 @@ class Lookup extends Component {
 
   search(params = { pageSize: 10, current: 1 }, ) {
     let searchProp = this.props.search;
-    const { method } = this.props;
+    const { method, params: paramsProps } = this.props;
 
     params = {
       filters: this.state.filters,
@@ -31,21 +31,30 @@ class Lookup extends Component {
 
     if (typeof searchProp == 'undefined') {
       searchProp = (url, params) => {
+        let values = params;
         let objParams = {
           method: method ? method : 'POST'
         };
 
+        if (paramsProps) {
+          values = {
+            ...values,
+            ...paramsProps
+          }
+        }
+
         if (method !== 'GET') {
           objParams = {
             ...objParams,
-            body: JSON.stringify(params)
+            body: JSON.stringify({ ...values })
           };
         } else {
           objParams = {
             ...objParams,
-            params
+            params: { ...values }
           };
         }
+
         return http(url, objParams);
       }
     }
@@ -112,6 +121,7 @@ class Lookup extends Component {
         <Modal width={width}
           visible={this.state.visible}
           title={this.props.title}
+          centered
           onOk={this.handleOk}
           zIndex={1000}
           onCancel={this.handleCancel}
@@ -144,6 +154,7 @@ class Lookup extends Component {
 
 Lookup.propTypes = {
   url: PropTypes.string.isRequired,
+  params: PropTypes.any,
   onSelect: PropTypes.func,
   title: PropTypes.string.isRequired,
   rowKey: PropTypes.func,
