@@ -5,9 +5,9 @@ let documentTitle = {
   set(str, after) {
     let title = Config.get('projectName');
 
-    if (after) {
+    if (after && str) {
       title = title.concat(' - ', str);
-    } else {
+    } else if (str) {
       title = str.concat(' - ', title)
     }
 
