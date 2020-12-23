@@ -38,6 +38,7 @@ class InputSearch extends Component {
     this.view = this.view.bind(this);
     this.autoComplete = React.createRef();
     this.inputRef = React.createRef();
+    this.idRef = React.createRef();
   }
 
   renderOption(item, index) {
@@ -84,14 +85,21 @@ class InputSearch extends Component {
     this.setState({ value: validValue, blured: true });
   }
 
-  handleId() {
+  handleId(event) {
+    event.preventDefault();
     const { id } = this.state;
     const firstResult = (val) => {
       if (!val) {
+        this.handleSelect(val);
         message.info(`Nenhuma valor encontrado.`);
+      } else if (val && id && (val.codigo == id || val.id == id)) {
+        this.handleSelect(val);
+      } else if (id) {
+        this.handleSelect(null);
+        message.info(`Nenhuma valor encontrado.`);
+      } else {
+        this.handleSelect(null);
       }
-
-      this.handleSelect(val);
     }
 
     this.search(id, firstResult);
@@ -224,6 +232,10 @@ class InputSearch extends Component {
 
     if (tempValue !== nextProps.value) {
       tempValue = nextProps.value;
+
+      if (tempValue && (tempValue.codigo || tempValue.id)) {
+        this.setState({ id: tempValue.codigo || tempValue.id });
+      }
     }
 
     this.setState({ tempValue });
@@ -269,10 +281,8 @@ class InputSearch extends Component {
   }
 
   focus() {
-    if (this.autoComplete.current && this.autoComplete.current.focus) {
-      this.autoComplete.current.focus();
-    } else if (this.inputRef.current && this.inputRef.current.focus) {
-      this.inputRef.current.focus();
+    if (this.idRef.current && this.idRef.current.focus) {
+      this.idRef.current.focus();
     }
   }
 
@@ -312,7 +322,7 @@ class InputSearch extends Component {
   }
 
   render() {
-    const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup, idInput, inputCol } = this.props;
+    const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup, autoFocus, inputCol } = this.props;
     const { loading, showArrow, erasable, blured, tempValue, value, dataSource } = this.state;
     const props = { ...this.props };
     const marginLeft = -3;
@@ -320,7 +330,7 @@ class InputSearch extends Component {
     var suffix = null;
     var LookupButton = null;
     var span = lookup != null ? 21 : 24;
-    span = idInput ? span - (inputCol || 4) : span;
+    span = span - (inputCol || 4);
     delete props.onChange;
     delete props.defaultValue;
     delete props.setRef;
@@ -330,7 +340,10 @@ class InputSearch extends Component {
     delete props.firstResult;
     delete props.defaults;
     delete props.inputCol;
-    delete props.idInput;
+    delete props.onSearch;
+    delete props.colTypeahead;
+    delete props.colLookup;
+    delete props.autoFocus;
 
     if (lookup) {
       if (typeof lookup === 'string') {
@@ -393,9 +406,10 @@ class InputSearch extends Component {
           <Col span={inputCol || 4}>
             <Input {...props}
               value={this.state.id || value && value.codigo || null}
-              placeholder='Código'
+              ref={this.idRef}
+              autoFocus={autoFocus}
               onChange={({ target: { value } }) => this.setState({ id: value })}
-              onPressEnter={() => this.handleId()} />
+              onPressEnter={(event) => this.handleId(event)} />
           </Col>
           <Col span={colTypeahead ? colTypeahead : span}>
             <AutoComplete {...props}
@@ -414,8 +428,7 @@ class InputSearch extends Component {
               onKeyDown={this.keyPress}
               onKeyUp={this.keyUp}>
               <Input ref={this.inputRef}
-                suffix={suffix}
-                {...props.autoFocus} />
+                suffix={suffix} />
             </AutoComplete>
           </Col>
           {lookup != null ?
@@ -452,8 +465,7 @@ InputSearch.propTypes = {
   placeholder: PropTypes.string,
   onPressTab: PropTypes.func,
   confirmTab: PropTypes.bool,
-  firstResult: PropTypes.func,
-  idInput: PropTypes.bool
+  firstResult: PropTypes.func
 };
 
 export default InputSearch;
