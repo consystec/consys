@@ -29,26 +29,22 @@ class InfoTooltip extends Component {
     }
 
     if (type == 'user') {
-      if (cadastro && cadastro.codigo) {
-        const id = cadastro.codigo;
-        const nome = typeof cadastro.descricao !== 'undefined' ? cadastro.descricao : cadastro.nome;
+      if (cadastro) {
 
         tituloCadastro = (
           <div>
             Cadastrado por<br />
-            <label className={utilsCss.bold}>{(id ? id + ' - ' : '') + nome}</label>
+            <label className={utilsCss.bold}>{cadastro}</label>
           </div>
         );
       }
 
-      if (altera && altera.codigo) {
-        const id = altera.codigo;
-        const nome = typeof altera.descricao !== 'undefined' ? altera.descricao : altera.nome;
+      if (altera) {
 
         tituloAltera = (
           <div>
             Alterado por<br />
-            <label className={utilsCss.bold}>{(id ? id + ' - ' : '') + nome}</label>
+            <label className={utilsCss.bold}>{altera}</label>
           </div>
         );
       }
@@ -78,10 +74,10 @@ InfoTooltip.propTypes = {
     PropTypes.number
   ]),
   altera: PropTypes.oneOfType([
-    PropTypes.string,
     PropTypes.object,
     PropTypes.instanceOf(Date),
-    PropTypes.number
+    PropTypes.number,
+    PropTypes.string,
   ]),
   fontSize: PropTypes.number,
   className: PropTypes.node

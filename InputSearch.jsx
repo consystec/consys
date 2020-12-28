@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { AutoComplete, Input, Row, Col } from 'antd';
+import { AutoComplete, Input, Row, Col, message } from 'antd';
 import { DownOutlined, LoadingOutlined, CloseOutlined } from '@ant-design/icons';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
@@ -12,7 +12,7 @@ const TYPEAHEAD_NO_VALUE = 'TYPEAHEAD_NO_VALUE';
 
 const map = {};
 
-class Typeahead extends Component {
+class InputSearch extends Component {
   constructor() {
     super();
     this.state = {
@@ -28,6 +28,7 @@ class Typeahead extends Component {
     this.handleSelectAutoComplete = this.handleSelectAutoComplete.bind(this);
     this.renderOption = this.renderOption.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
+    this.handleId = this.handleId.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
     this.typeaheadRef = this.typeaheadRef.bind(this);
     this.createSearch = this.createSearch.bind(this);
@@ -37,6 +38,7 @@ class Typeahead extends Component {
     this.view = this.view.bind(this);
     this.autoComplete = React.createRef();
     this.inputRef = React.createRef();
+    this.idRef = React.createRef();
   }
 
   renderOption(item, index) {
@@ -56,7 +58,7 @@ class Typeahead extends Component {
   }
 
   handleSelect(record) {
-    this.setState({ tempValue: record, loading: false });
+    this.setState({ id: record ? record.codigo : null, tempValue: record, loading: false });
     this.props.onChange && this.props.onChange(record, this.view(record));
   }
 
@@ -81,6 +83,26 @@ class Typeahead extends Component {
     }
 
     this.setState({ value: validValue, blured: true });
+  }
+
+  handleId(event) {
+    event.preventDefault();
+    const { id } = this.state;
+    const firstResult = (val) => {
+      if (!val) {
+        this.handleSelect(val);
+        message.info(`Nenhuma valor encontrado.`);
+      } else if (val && id && (val.codigo == id || val.id == id)) {
+        this.handleSelect(val);
+      } else if (id) {
+        this.handleSelect(null);
+        message.info(`Nenhuma valor encontrado.`);
+      } else {
+        this.handleSelect(null);
+      }
+    }
+
+    this.search(id, firstResult);
   }
 
   handleSearch(value) {
@@ -210,6 +232,10 @@ class Typeahead extends Component {
 
     if (tempValue !== nextProps.value) {
       tempValue = nextProps.value;
+
+      if (tempValue && (tempValue.codigo || tempValue.id)) {
+        this.setState({ id: tempValue.codigo || tempValue.id });
+      }
     }
 
     this.setState({ tempValue });
@@ -255,10 +281,8 @@ class Typeahead extends Component {
   }
 
   focus() {
-    if (this.autoComplete.current && this.autoComplete.current.focus) {
-      this.autoComplete.current.focus();
-    } else if (this.inputRef.current && this.inputRef.current.focus) {
-      this.inputRef.current.focus();
+    if (this.idRef.current && this.idRef.current.focus) {
+      this.idRef.current.focus();
     }
   }
 
@@ -298,14 +322,15 @@ class Typeahead extends Component {
   }
 
   render() {
-    const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup, idInput } = this.props;
+    const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup, autoFocus, inputCol } = this.props;
     const { loading, showArrow, erasable, blured, tempValue, value, dataSource } = this.state;
     const props = { ...this.props };
     const marginLeft = -3;
     const marginTop = -10;
     var suffix = null;
     var LookupButton = null;
-    var span = lookup != null ? 22 : 24;
+    var span = lookup != null ? 21 : 24;
+    span = span - (inputCol || 4);
     delete props.onChange;
     delete props.defaultValue;
     delete props.setRef;
@@ -314,6 +339,11 @@ class Typeahead extends Component {
     delete props.confirmTab;
     delete props.firstResult;
     delete props.defaults;
+    delete props.inputCol;
+    delete props.onSearch;
+    delete props.colTypeahead;
+    delete props.colLookup;
+    delete props.autoFocus;
 
     if (lookup) {
       if (typeof lookup === 'string') {
@@ -372,13 +402,16 @@ class Typeahead extends Component {
             : null
           }
         </span>
-        <Row>
-          {idInput &&
-            <Col span={4}>
-              <Input />
-            </Col>
-          }
-          <Col span={colTypeahead ? colTypeahead : (lookup != null ? 21 : 24)}>
+        <Row gutter={2}>
+          <Col span={inputCol || 4}>
+            <Input {...props}
+              value={this.state.id || value && value.codigo || null}
+              ref={this.idRef}
+              autoFocus={autoFocus}
+              onChange={({ target: { value } }) => this.setState({ id: value })}
+              onPressEnter={(event) => this.handleId(event)} />
+          </Col>
+          <Col span={colTypeahead ? colTypeahead : span}>
             <AutoComplete {...props}
               defaultActiveFirstOption
               ref={this.autoComplete}
@@ -395,8 +428,7 @@ class Typeahead extends Component {
               onKeyDown={this.keyPress}
               onKeyUp={this.keyUp}>
               <Input ref={this.inputRef}
-                suffix={suffix}
-                {...props.autoFocus} />
+                suffix={suffix} />
             </AutoComplete>
           </Col>
           {lookup != null ?
@@ -411,7 +443,7 @@ class Typeahead extends Component {
   }
 }
 
-Typeahead.propTypes = {
+InputSearch.propTypes = {
   view: PropTypes.func.isRequired,
   onChange: PropTypes.func,
   noEmpty: PropTypes.bool,
@@ -433,8 +465,7 @@ Typeahead.propTypes = {
   placeholder: PropTypes.string,
   onPressTab: PropTypes.func,
   confirmTab: PropTypes.bool,
-  firstResult: PropTypes.func,
-  idInput: PropTypes.bool
+  firstResult: PropTypes.func
 };
 
-export default Typeahead;
+export default InputSearch;
