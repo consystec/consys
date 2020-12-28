@@ -210,6 +210,7 @@ class InputSearch extends Component {
 
     this.setState({
       tempValue,
+      id: tempValue ? (tempValue.codigo || tempValue.id) : null,
       showArrow: typeof showArrow === 'undefined' ? true : showArrow,
       erasable: typeof erasable === 'undefined' ? true : erasable
     });
@@ -232,7 +233,7 @@ class InputSearch extends Component {
 
     if (tempValue !== nextProps.value) {
       tempValue = nextProps.value;
-
+      
       if (tempValue && (tempValue.codigo || tempValue.id)) {
         this.setState({ id: tempValue.codigo || tempValue.id });
       }
