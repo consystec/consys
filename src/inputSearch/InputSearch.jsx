@@ -10,8 +10,6 @@ import Lookup from 'consys/Lookup';
 
 const TYPEAHEAD_NO_VALUE = 'TYPEAHEAD_NO_VALUE';
 
-const map = {};
-
 class InputSearch extends Component {
   constructor() {
     super();
@@ -33,9 +31,8 @@ class InputSearch extends Component {
     this.typeaheadRef = this.typeaheadRef.bind(this);
     this.createSearch = this.createSearch.bind(this);
     this.goSearch = this.goSearch.bind(this);
-    this.keyPress = this.keyPress.bind(this);
-    this.keyUp = this.keyUp.bind(this);
     this.view = this.view.bind(this);
+    this.keyPress = this.keyPress.bind(this);
     this.autoComplete = React.createRef();
     this.inputRef = React.createRef();
     this.idRef = React.createRef();
@@ -59,6 +56,7 @@ class InputSearch extends Component {
 
   handleSelect(record) {
     this.setState({ id: record ? record.codigo : null, tempValue: record, loading: false });
+
     this.props.onChange && this.props.onChange(record, this.view(record));
   }
 
@@ -86,8 +84,13 @@ class InputSearch extends Component {
   }
 
   handleId(event) {
-    event.preventDefault();
+    const { confirmTab } = this.props;
     const { id } = this.state;
+
+    if (confirmTab) {
+      event.preventDefault();
+    }
+    
     const firstResult = (val) => {
       if (!val) {
         this.handleSelect(val);
@@ -233,7 +236,7 @@ class InputSearch extends Component {
 
     if (tempValue !== nextProps.value) {
       tempValue = nextProps.value;
-      
+
       if (tempValue && (tempValue.codigo || tempValue.id)) {
         this.setState({ id: tempValue.codigo || tempValue.id });
       }
@@ -287,38 +290,11 @@ class InputSearch extends Component {
     }
   }
 
-  keyPress(e) {
-    const { onPressTab, confirmTab } = this.props;
-    const { dataSource } = this.state;
-
-    if (this.inputRef.current) {
-      if (e.key === 'Shift' || e.key === 'Tab') {
-        map[e.keyCode] = e.type == 'keydown';
+  keyPress(event) {
+    if (event.which == 9) {
+      if (this.state.id) {
+        this.handleId(event);
       }
-
-      if (!map[16] && e.key === 'Tab' && (onPressTab || confirmTab)) {
-        let input = this.inputRef.current.input;
-        let aria = input.attributes[9].nodeValue;
-        let indexOf = aria.charAt(aria.length - 1);
-        let keys = Object.keys(input);
-
-        if (!(keys && input[keys[1]] && input[keys[1]]['aria-expanded'])) {
-          return;
-        }
-
-        if (dataSource[indexOf]) {
-          this.handleSelect(dataSource[indexOf]);
-          onPressTab && onPressTab(dataSource[indexOf]);
-        } else {
-          this.handleBlur();
-        }
-      }
-    }
-  }
-
-  keyUp(e) {
-    if (e.key === 'Shift' || e.key === 'Tab') {
-      map[e.keyCode] = e.type == 'keydown';
     }
   }
 
@@ -410,7 +386,8 @@ class InputSearch extends Component {
               ref={this.idRef}
               autoFocus={autoFocus}
               onChange={({ target: { value } }) => this.setState({ id: value })}
-              onPressEnter={(event) => this.handleId(event)} />
+              onPressEnter={(event) => this.handleId(event)}
+              onKeyDown={(event) => this.keyPress(event)} />
           </Col>
           <Col span={colTypeahead ? colTypeahead : span}>
             <AutoComplete {...props}
@@ -425,9 +402,7 @@ class InputSearch extends Component {
               onSearch={this.handleSearch}
               onBlur={this.handleBlur}
               onFocus={this.handleFocus}
-              placeholder={placeholder ? placeholder : "Selecione"}
-              onKeyDown={this.keyPress}
-              onKeyUp={this.keyUp}>
+              placeholder={placeholder ? placeholder : "Selecione"}>
               <Input ref={this.inputRef}
                 suffix={suffix} />
             </AutoComplete>
