@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { AutoComplete, Input, Row, Col, message } from 'antd';
 import { DownOutlined, LoadingOutlined, CloseOutlined } from '@ant-design/icons';
 import ReactDOM from 'react-dom';
+import cryptoJS from 'crypto-js';
 import PropTypes from 'prop-types';
+import { hasLocalStorage } from 'consys/localStorage';
 import http from 'consys/http';
 import style from 'consys/typeahead.css';
 import utilsCss from 'consys/utils.css';
@@ -90,7 +92,7 @@ class InputSearch extends Component {
     if (confirmTab) {
       event.preventDefault();
     }
-    
+
     const firstResult = (val) => {
       if (!val) {
         this.handleSelect(val);
@@ -105,7 +107,7 @@ class InputSearch extends Component {
       }
     }
 
-    this.search(id, firstResult);
+    this.search(id, firstResult, true);
   }
 
   handleSearch(value) {
@@ -125,9 +127,49 @@ class InputSearch extends Component {
     }, 900);
   }
 
-  createSearch() {
-    const { method, params } = this.props;
+  createSearch(value, searchId) {
+    const { method, params, offline, campos } = this.props;
     let searchProps = this.props.search;
+
+    if (offline && navigator.onLine == false && hasLocalStorage) {
+      return () => {
+        var dadosLocalStorage = hasLocalStorage.getItem("GENERETE_INFO_VALUE");
+
+        if (dadosLocalStorage != 'undefined' && dadosLocalStorage !== null) {
+          var decryptedBytes = cryptoJS.AES.decrypt(dadosLocalStorage, "CONSYSTEC10");
+          var dados = JSON.parse(decryptedBytes.toString(cryptoJS.enc.Utf8));
+
+          return new Promise((resolve, reject) => {
+            if (dados && campos) {
+              var info;
+
+              for (let i = 0; i < campos.length; i++) {
+                const el = campos[i];
+
+                if (info && info[el]) {
+                  info = info[el];
+                  break;
+                }
+
+                if (!info && dados.data[el]) {
+                  info = dados.data[el];
+                }
+              }
+
+              if (value && !searchId) {
+                info = info.filter(el => el.descricao.toLowerCase().includes(value.toLowerCase()));
+              } else if (value && searchId) {
+                info = info.filter(el => el.codigo.toString() == value);
+              }
+
+              resolve(info);
+            } else {
+              reject({ message: 'erro' })
+            }
+          });
+        }
+      };
+    }
 
     if (typeof searchProps === 'undefined') {
       searchProps = (value) => {
@@ -154,9 +196,9 @@ class InputSearch extends Component {
     return searchProps;
   }
 
-  search(value, firstResult) {
+  search(value, firstResult, searchId) {
     const { onSearch, onResult, defaults } = this.props;
-    let searchProps = this.createSearch();
+    let searchProps = this.createSearch(value, searchId);
     const proms = searchProps(value);
 
     if (this.state.blured) {
@@ -318,9 +360,12 @@ class InputSearch extends Component {
     delete props.defaults;
     delete props.inputCol;
     delete props.onSearch;
+    delete props.search;
     delete props.colTypeahead;
     delete props.colLookup;
     delete props.autoFocus;
+    delete props.offline;
+    delete props.campos;
 
     if (lookup) {
       if (typeof lookup === 'string') {
@@ -429,6 +474,7 @@ InputSearch.propTypes = {
     PropTypes.node
   ]),
   rowKey: PropTypes.func,
+  offline: PropTypes.bool,
   columns: PropTypes.array,
   search: PropTypes.func,
   onResult: PropTypes.func,
@@ -441,7 +487,8 @@ InputSearch.propTypes = {
   placeholder: PropTypes.string,
   onPressTab: PropTypes.func,
   confirmTab: PropTypes.bool,
-  firstResult: PropTypes.func
+  firstResult: PropTypes.func,
+  campos: PropTypes.array
 };
 
 export default InputSearch;
