@@ -30,6 +30,11 @@ class ValueMaskInput extends Component {
     if (min && valor < min) {
       valor = min;
     }
+
+    if (typeof valor === 'string') {
+      valor = this.handleString(valor);
+    }
+
     valor = valor.toString();
 
     if (typeof decimals == 'undefined') {
@@ -93,23 +98,9 @@ class ValueMaskInput extends Component {
 
     let val = defaultValue || valor;
 
-    if (val) {
-      if (parseFloat(val) == 0) {
-        val = "";
-      } else if (typeof val == 'string') {
-        val = val.replace(/[^0-9,]/g, '');
-        val = val.replace(',', '.');
-        val = parseFloat(val);
+    val = this.handleString(val);
 
-        if (!val) {
-          val = '';
-        }
-      }
-
-      this.setState({ valor: val });
-    } else {
-      this.setState({ valor: '' })
-    }
+    this.setState({ valor: val });
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -148,6 +139,26 @@ class ValueMaskInput extends Component {
     const { onPressEnter } = this.props;
     this.currency.blur();
     onPressEnter && onPressEnter();
+  }
+
+  handleString(val) {
+    if (val) {
+      if (parseFloat(val) == 0) {
+        val = "";
+      } else if (typeof val == 'string') {
+        val = val.replace(/[^0-9,]/g, '');
+        val = val.replace(',', '.');
+        val = parseFloat(val);
+
+        if (!val) {
+          val = '';
+        }
+      }
+
+      return val;
+    } else {
+      return val;
+    }
   }
 
   render() {
