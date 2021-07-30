@@ -31,7 +31,7 @@ class ValueMaskInput extends Component {
       valor = min;
     }
 
-    if (typeof valor === 'string') {
+    if (typeof valor === 'string' && valor.includes(prefixMask)) {
       valor = this.handleString(valor);
     }
 
