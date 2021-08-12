@@ -1,8 +1,13 @@
+const path = require('path');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = function (env) {
   return {
     mode: 'production',
+    output: {
+      path: (env && env.dist) || path.join(__dirname, 'dist'),
+      filename: 'index.js',
+    },
     plugins: [
       new CopyPlugin({
         patterns: [
