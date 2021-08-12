@@ -41,7 +41,7 @@ module.exports = function (response) {
     if (err)
       console.log('erro', err);
   });
-  
+
   webpack(config, function () {
     console.log('Compactacao webpack finalizada');
   });

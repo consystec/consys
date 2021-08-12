@@ -1,7 +1,5 @@
-import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 import { Input } from 'antd';
-import StringMask from 'string-mask';
 import PropTypes from 'prop-types';
 
 class MaskInput extends Component {
@@ -12,7 +10,7 @@ class MaskInput extends Component {
     this.setValue = this.setValue.bind(this);
   }
   setValue(valor) {
-    const {onChange, format, clearValue} = this.props;
+    const { onChange, format, clearValue } = this.props;
     if (typeof valor !== 'undefined') {
       valor = clearValue(valor);
       onChange && onChange(valor);
@@ -23,13 +21,13 @@ class MaskInput extends Component {
     });
   }
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const {value} = this.props;
+    const { value } = this.props;
     if (value !== nextProps.value) {
       this.setValue(nextProps.value);
     }
   }
   componentDidMount() {
-    const {defaultValue, value} = this.props;
+    const { defaultValue, value } = this.props;
     this.setValue(defaultValue || value);
   }
   handleChange(ev) {
@@ -38,7 +36,7 @@ class MaskInput extends Component {
     this.setValue(valor);
   }
   render() {
-    const {valor} = this.state;
+    const { valor } = this.state;
     const {
       onChange,
       format,
@@ -48,7 +46,7 @@ class MaskInput extends Component {
     } = this.props;
     return (
       <Input {...rest}
-        ref={inputRef} 
+        ref={inputRef}
         value={valor}
         onChange={this.handleChange} />
     );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {InputNumber} from 'antd';
+import { InputNumber } from 'antd';
 
 class _InputNumber extends Component {
   render() {
@@ -7,16 +7,14 @@ class _InputNumber extends Component {
       style,
       ...rest
     } = this.props;
-    if (!style)
-    {
+    if (!style) {
       style = {};
     }
-    if (!style.width)
-    {
+    if (!style.width) {
       style.width = '100%';
     }
     return (
-      <InputNumber {...rest} style={style}  />
+      <InputNumber {...rest} style={style} />
     );
   }
 }

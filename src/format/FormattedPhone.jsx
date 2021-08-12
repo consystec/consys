@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import FormattedMask from 'consys/FormattedMask'; 
+import FormattedMask from 'consys/FormattedMask';
 import StringMask from 'string-mask';
 
-const phoneMask8D = {  
+const phoneMask8D = {
   areaCode: new StringMask('(00) 0000-0000'),
   simple: new StringMask('0000-0000')
-}, phoneMask9D = { 
+}, phoneMask9D = {
   areaCode: new StringMask('(00) 0 0000-0000'),
   simple: new StringMask('0 0000-0000')
 }, phoneMask0800 = {
@@ -17,14 +17,14 @@ const phoneMask8D = {
   areaCode: new StringMask('+00 (00) 0 0000-0000'),
 }
 
-function getFormatPhone(cleanValue){
+function getFormatPhone(cleanValue) {
   if (cleanValue != null) {
     cleanValue = cleanValue.replace(/\D+/gm, "");
   }
   return getMaskPhone(cleanValue).apply(cleanValue);
 }
 
-function getMaskPhone(cleanValue){
+function getMaskPhone(cleanValue) {
   var maskValue;
 
   if (cleanValue && cleanValue.indexOf('0800') === 0) {
@@ -42,20 +42,20 @@ function getMaskPhone(cleanValue){
   } else {
     maskValue = phoneMark13D.areaCode
   }
-  
+
   return maskValue;
 }
 
 class FormattedPhone extends Component {
   render() {
-    const rest = {...this.props};
+    const rest = { ...this.props };
     delete rest.mask;
     return (
       <FormattedMask {...rest}
-        mask={getMaskPhone(this.props.value).pattern}/>
+        mask={getMaskPhone(this.props.value).pattern} />
     );
   }
 }
 
 export default FormattedPhone;
-export {getFormatPhone, getMaskPhone};
+export { getFormatPhone, getMaskPhone };

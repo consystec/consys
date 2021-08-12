@@ -1,4 +1,4 @@
-import {json2xml} from 'consys/xml';
+import { json2xml } from 'consys/xml';
 import http from 'consys/http';
 import Config from 'consys/Config';
 import geoIP from 'consys/geoIP';
@@ -15,25 +15,23 @@ const Types = {
 }
 
 class Payment {
-  constructor({type, env}, callback) {
+  constructor({ type, env }, callback) {
     const that = this;
-    if (!env)
-    {
+    if (!env) {
       env = process.env.NODE_ENV == 'prod' ? 'prod' : 'test';
     }
     this.typeName = type;
     this.type = Types[type];
     this.info = this.type[env];
-    if (!this.type)
-    {
-      throw 'Not a valid type '+type;
+    if (!this.type) {
+      throw 'Not a valid type ' + type;
     }
     this._payment = {
       itens: [],
       shipping: {}
     }
     var paymentLibScript = document.createElement('script');
-    paymentLibScript.setAttribute('src',this.info.lib);
+    paymentLibScript.setAttribute('src', this.info.lib);
     document.head.appendChild(paymentLibScript);
 
     setTimeout(() => {
@@ -41,8 +39,7 @@ class Payment {
     }, 500);
   }
   send(code, success, abort) {
-    if (!code)
-    {
+    if (!code) {
       return;
     }
     var isOpenLightbox = PagSeguroLightbox({
@@ -51,12 +48,12 @@ class Payment {
       success,
       abort
     });
-    if (!isOpenLightbox){
-        location.href="https://pagseguro.uol.com.br/v2/checkout/payment.html?code="+code;
+    if (!isOpenLightbox) {
+      location.href = "https://pagseguro.uol.com.br/v2/checkout/payment.html?code=" + code;
     }
   }
 
-  setStore({email}) {
+  setStore({ email }) {
     this._payment.store = {
       email
     }
@@ -66,7 +63,7 @@ class Payment {
     this._payment.shipping = shipping;
   }
 
-  removeItem({id}) {
+  removeItem({ id }) {
     let index = -1;
     for (var i = 0; i < this._payment.itens.length; i++) {
       if (id == this._payment.itens[i].id) {
@@ -78,7 +75,7 @@ class Payment {
     }
   }
 
-  addItem({id, description, amount, quantity}) {
+  addItem({ id, description, amount, quantity }) {
     this._payment.itens.push({
       id,
       description,

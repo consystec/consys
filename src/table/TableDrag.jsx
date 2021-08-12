@@ -81,10 +81,10 @@ class TableDrag extends React.Component {
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const {dataSource} = this.props;
-    const {data} = this.state;
+    const { dataSource } = this.props;
+    const { data } = this.state;
     if (data !== nextProps.dataSource) {
-      this.setState({data: dataSource})
+      this.setState({ data: dataSource })
     }
   }
 
@@ -108,9 +108,9 @@ class TableDrag extends React.Component {
 
     return (
       <DndProvider backend={HTML5Backend}>
-        <Table {...this.props} 
+        <Table {...this.props}
           dataSource={data}
-          {...(sizeScreen == 'xs' || sizeScreen == 'sm' || sizeScreen == 'md' ? {scroll: {x: true}, style: {whiteSpace: 'nowrap'}} : null)}
+          {...(sizeScreen == 'xs' || sizeScreen == 'sm' || sizeScreen == 'md' ? { scroll: { x: true }, style: { whiteSpace: 'nowrap' } } : null)}
           components={this.components}
           onRow={(_, index) => ({
             index,

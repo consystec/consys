@@ -1,32 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import utilsCss from 'consys/utils.css';
 import StringMask from 'string-mask';
 
 class FormattedMask extends Component {
-  constructor(props){
+  constructor(props) {
     super();
-    this.state = {value: this.setValue(props)};
+    this.state = { value: this.setValue(props) };
     this.setValue = this.setValue.bind(this);
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setValue(this.props, true);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const {value} = this.props;
+    const { value } = this.props;
     if (value !== nextProps.value) {
       this.setValue(nextProps, true);
     }
   }
 
-  setValue(props, seth){
-    const {value, mask} = props;
+  setValue(props, seth) {
+    const { value, mask } = props;
     const format = new StringMask(mask);
     const formatted = format.apply(value);
     if (seth) {
-      this.setState({value: formatted});
+      this.setState({ value: formatted });
     }
     return formatted;
   }

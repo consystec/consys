@@ -1,9 +1,8 @@
-import storage, {hasLocalStorage} from 'consys/localStorage';
+import storage, { hasLocalStorage } from 'consys/localStorage';
 const TABS_KEY = 'tabsKeyLocalStorage';
 
 let tabs = [];
-if (hasLocalStorage)
-{
+if (hasLocalStorage) {
   tabs = storage.getItem(TABS_KEY) || [];
 }
 
@@ -26,8 +25,7 @@ const configTab = {
         p[key](this.tabs);
       }
     }
-    if (hasLocalStorage)
-    {
+    if (hasLocalStorage) {
       storage.setItem(TABS_KEY, this.tabs);
     }
   },
@@ -47,14 +45,12 @@ const configTab = {
         tab = pane;
         lastIndex = i - 1;
       }
-      if (lastIndex < 0)
-      {
+      if (lastIndex < 0) {
         lastIndex = 0;
       }
     });
     let changeActiveKey = false;
-    if (tab)
-    {
+    if (tab) {
       storage.removeItem(tab.name);
       this.tabs = this.tabs.filter(tab => tab.key !== url);
       if (this.tabs[lastIndex] && this.activeKey === url) {
@@ -66,26 +62,23 @@ const configTab = {
     }
     return changeActiveKey;
   },
-  addTab(url, {title, name, closable} = {}) {
+  addTab(url, { title, name, closable } = {}) {
     let addTab = true;
     const tabObj = { key: url, title, name, closable };
     for (var i = 0; i < this.tabs.length; i++) {
-      if (this.tabs[i].key == url)
-      {
+      if (this.tabs[i].key == url) {
         addTab = false;
         this.activeKey = url;
-        if (tabObj.title && tabObj.title.length > 0)
-        {
+        if (tabObj.title && tabObj.title.length > 0) {
           this.tabs[i] = tabObj;
         }
       }
     }
-    if (addTab)
-    {
+    if (addTab) {
       this.activeKey = url;
       this.tabs.push(tabObj);
     }
-    
+
     this._callbacks();
   }
 };

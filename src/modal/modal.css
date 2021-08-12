@@ -3,16 +3,16 @@
 }
 
 .center:before {
-  content: '';
-  display: inline-block;
-  height: 100%;
+  content       : '';
+  display       : inline-block;
+  height        : 100%;
   vertical-align: middle;
-  width: 0;
+  width         : 0;
 }
 
 .center :global .ant-modal {
-  display: inline-block;
+  display       : inline-block;
   vertical-align: middle;
-  top: 0.6rem;
-  text-align: left;
+  top           : 0.6rem;
+  text-align    : left;
 }

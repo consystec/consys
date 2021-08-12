@@ -4,7 +4,7 @@ let hasLocalStorage = localStorage;
 if (hasLocalStorage) {
   let testKey = 'react-localstorage.hoc.test-key';
   try {
-    localStorage.setItem(testKey,'foo');
+    localStorage.setItem(testKey, 'foo');
     localStorage.removeItem(testKey);
   } catch (e) {
     hasLocalStorage = false;
@@ -12,15 +12,15 @@ if (hasLocalStorage) {
 }
 
 function checkRecursive(value) {
-  for(let key in value) {
+  for (let key in value) {
     if (typeof value[key] === 'string') {
       //tranforma tudo que se pareça com uma "Date" em um objeto do "moment.js"
-      if (value[key][4] == '-' && value[key][value[key].length-1] == 'Z') {
+      if (value[key][4] == '-' && value[key][value[key].length - 1] == 'Z') {
         value[key] = moment(value[key]);
       }
     }
-    if (!(value[key] instanceof moment) && 
-    ( typeof value[key] === 'object' || typeof value[key] === 'array')) {
+    if (!(value[key] instanceof moment) &&
+      (typeof value[key] === 'object' || typeof value[key] === 'array')) {
       checkRecursive(value[key]);
     }
   }
@@ -35,7 +35,7 @@ let storage = {
       checkRecursive(parsedItem);
       return parsedItem;
     }
-    
+
     return null;
   },
   setItem(name, item) {
@@ -50,4 +50,4 @@ let storage = {
 };
 
 export default storage;
-export {hasLocalStorage};
+export { hasLocalStorage };

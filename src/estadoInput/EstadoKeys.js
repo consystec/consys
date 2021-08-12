@@ -1,110 +1,110 @@
 const KEYS_ESTADOS = [
   {
-    key: 'AC', 
+    key: 'AC',
     name: 'Acre'
   },
   {
-    key: 'AL', 
+    key: 'AL',
     name: 'Alagoas'
   },
   {
-    key: 'AP', 
+    key: 'AP',
     name: 'Amapá'
   },
   {
-    key: 'AM', 
+    key: 'AM',
     name: 'Amazonas'
   },
   {
-    key: 'BA', 
+    key: 'BA',
     name: 'Bahia'
   },
   {
-    key: 'CE', 
+    key: 'CE',
     name: 'Ceará'
   },
   {
-    key: 'DF', 
+    key: 'DF',
     name: 'Distrito Federal'
   },
   {
-    key: 'ES', 
+    key: 'ES',
     name: 'Espírito Santo'
   },
   {
-    key: 'GO', 
+    key: 'GO',
     name: 'Goiás'
   },
   {
-    key: 'MA', 
+    key: 'MA',
     name: 'Maranhão'
   },
   {
-    key: 'MT', 
+    key: 'MT',
     name: 'Mato Grosso'
   },
   {
-    key: 'MS', 
+    key: 'MS',
     name: 'Mato Grosso do Sul'
   },
   {
-    key: 'MG', 
+    key: 'MG',
     name: 'Minas Gerais'
   },
   {
-    key: 'PA', 
+    key: 'PA',
     name: 'Pará'
   },
   {
-    key: 'PB', 
+    key: 'PB',
     name: 'Paraíba'
   },
   {
-    key: 'PR', 
+    key: 'PR',
     name: 'Paraná'
   },
   {
-    key: 'PE', 
+    key: 'PE',
     name: 'Pernambuco'
   },
   {
-    key: 'PI', 
+    key: 'PI',
     name: 'Piauí'
   },
   {
-    key: 'RJ', 
+    key: 'RJ',
     name: 'Rio de Janeiro'
   },
   {
-    key: 'RN', 
+    key: 'RN',
     name: 'Rio Grande do Norte'
   },
   {
-    key: 'RS', 
+    key: 'RS',
     name: 'Rio Grande do Sul'
   },
   {
-    key: 'RO', 
+    key: 'RO',
     name: 'Rondônia'
   },
   {
-    key: 'RR', 
+    key: 'RR',
     name: 'Roraima'
   },
   {
-    key: 'SC', 
+    key: 'SC',
     name: 'Santa Catarina'
   },
   {
-    key: 'SP', 
+    key: 'SP',
     name: 'São Paulo'
   },
   {
-    key: 'SE', 
+    key: 'SE',
     name: 'Sergipe'
   },
   {
-    key: 'TO', 
+    key: 'TO',
     name: 'Tocantins'
   },
 ]

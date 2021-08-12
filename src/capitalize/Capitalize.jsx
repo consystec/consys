@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-
 function capitalize(content) {
-  if (typeof content === 'undefined')
-  {
+  if (typeof content === 'undefined') {
     return '';
   }
   const contentMod = content.toLowerCase();
@@ -30,4 +28,4 @@ Capitalize.propTypes = {
 };
 
 export default Capitalize;
-export {capitalize};
+export { capitalize };

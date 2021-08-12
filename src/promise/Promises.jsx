@@ -34,7 +34,7 @@ function Promises() {
   }
 
   return {
-    promise, 
+    promise,
     resolve,
     reject
   };

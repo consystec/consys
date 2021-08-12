@@ -12,7 +12,7 @@ function DetailInput({ title, children, extra }) {
       <div className={utilsCss.mb2}>
         {children}
       </div>
-      {extra && 
+      {extra &&
         <div className={utilsCss.mtn1}>
           {extra}
         </div>

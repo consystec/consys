@@ -27,12 +27,12 @@ class _Tabs extends Component {
       if (this.refs.tabsRef) {
         that.setState({ panes, activeKey: configTab.activeKey });
       }
-    }); 
+    });
   }
 
   onChange(activeKey) {
     const { history, callback } = this.props;
-    
+
     configTab.addTab(activeKey);
     history.push(activeKey);
     callback && callback(activeKey);
@@ -50,21 +50,21 @@ class _Tabs extends Component {
 
   render() {
     return (
-      <Row ref="tabsRef" 
-        type="flex" 
-        justify="space-around" 
-        align="middle" 
-        style={{backgroundColor: 'rgba(0, 0, 0, 0.21)'}}>
-        <Col span={23} 
-          style={{marginTop: '20px', marginBottom: '-20px'}}>
+      <Row ref="tabsRef"
+        type="flex"
+        justify="space-around"
+        align="middle"
+        style={{ backgroundColor: 'rgba(0, 0, 0, 0.21)' }}>
+        <Col span={23}
+          style={{ marginTop: '20px', marginBottom: '-20px' }}>
           <Tabs className={style.tabs}
             hideAdd
             onChange={this.onChange}
             activeKey={this.state.activeKey}
             type="editable-card"
             onEdit={this.onEdit}>
-            {this.state.panes.map(pane => 
-              <TabPane tab={pane.title == 't' ? 'Resumo' : pane.title} 
+            {this.state.panes.map(pane =>
+              <TabPane tab={pane.title == 't' ? 'Resumo' : pane.title}
                 key={pane.key}
                 closable={pane.closable}>
               </TabPane>

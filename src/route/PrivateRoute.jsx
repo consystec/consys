@@ -14,10 +14,10 @@ class PrivateRoute extends Component {
   componentDidMount() {
     var that = this;
     this.onUserChange = auth.onUserChange((user) => {
-      that.setState({user});
+      that.setState({ user });
     });
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     auth.removeUserChange(this.onUserChange);
   }
   render() {
@@ -26,7 +26,7 @@ class PrivateRoute extends Component {
         <Redirect to={{
           pathname: Config.get('loginUrl'),
           state: { from: this.props.location }
-        }}/>
+        }} />
       );
     }
     return (<Route {...this.props} />);

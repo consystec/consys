@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import MaskInput from 'consys/MaskInput';
 import StringMask from 'string-mask';
 import PropTypes from 'prop-types';

@@ -13,18 +13,18 @@ class NoUser extends Component {
   componentDidMount() {
     var that = this;
     this.onUserChange = auth.onUserChange((user) => {
-      that.setState({user});
+      that.setState({ user });
     });
   }
-  componentWillUnmount () {
+  componentWillUnmount() {
     auth.removeUserChange(this.onUserChange);
   }
   render() {
-    const {url} = this.props;
+    const { url } = this.props;
     if (this.state.user) {
       const { from } = { from: { pathname: url } };
       return (
-        <Redirect to={from}/>
+        <Redirect to={from} />
       );
     }
     return <span></span>;

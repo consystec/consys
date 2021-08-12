@@ -1,6 +1,6 @@
 let favicon = {
   set(cfg) {
-    var {url, type, rel} = cfg;
+    var { url, type, rel } = cfg;
     var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
     link.type = type || 'image/x-icon';
     link.rel = rel || 'shortcut icon';

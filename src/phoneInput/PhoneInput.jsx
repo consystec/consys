@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import MaskInput from 'consys/MaskInput';
-import StringMask from 'string-mask';
 import { getFormatPhone } from 'consys/FormattedPhone';
 
 class PhoneInput extends Component {
@@ -11,10 +10,10 @@ class PhoneInput extends Component {
       ...rest
     } = this.props;
     return (
-      <MaskInput 
+      <MaskInput
         {...rest}
         clearValue={(rawValue) => rawValue ? rawValue.toString().replace(/[^0-9]/g, '').slice(0, 13) : rawValue}
-        format={(cleanValue) =>  getFormatPhone(cleanValue)} />
+        format={(cleanValue) => getFormatPhone(cleanValue)} />
     );
   }
 }

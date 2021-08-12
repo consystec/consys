@@ -12,7 +12,7 @@ document.body.onpaste = function (e) {
         itemFile.type.indexOf('image/') !== -1) {
         const id = uuid();
         const file = itemFile.getAsFile();
-        const name = id+"."+itemFile.type.split("/")[1];
+        const name = id + "." + itemFile.type.split("/")[1];
         const blob = new File([file], name, { type: file.type });
         blob.uid = id;
         filesFromClipboard.push(blob);
