@@ -3,7 +3,7 @@ import txt from '!raw-loader!antd/lib/style/themes/default.less';
 const palette = lessToJs(txt);
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
 
-function clearValuePallete(value){
+function clearValuePallete(value) {
   return parseInt(palette[value]);
 }
 
@@ -13,7 +13,7 @@ function screenSize() {
 
   if (width >= clearValuePallete("@screen-xl")) {
     size = "xl";
-  } 
+  }
   else if (width >= clearValuePallete("@screen-lg") && width < clearValuePallete("@screen-xl")) {
     size = "lg";
   }

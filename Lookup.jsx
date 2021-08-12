@@ -19,7 +19,7 @@ class Lookup extends Component {
     this.search = this.search.bind(this);
   }
 
-  search(params = { pageSize: 10, current: 1 }, ) {
+  search(params = { pageSize: 10, current: 1 },) {
     let searchProp = this.props.search;
     const { method, params: paramsProps } = this.props;
 

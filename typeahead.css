@@ -1,7 +1,8 @@
 .typeahead :global .ant-input-suffix {
   right: 0;
 }
-.typeahead :global input, 
+
+.typeahead :global input,
 .typeahead :global .ant-input-affix-wrapper {
   /*width: initial !important;*/
 }

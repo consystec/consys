@@ -4,10 +4,10 @@ function geoIP(callback) {
   http('http://ip-api.com/json', {
     api: false,
     json: false
-  }).then(({query}) => {
-    callback && callback({ip: query});
+  }).then(({ query }) => {
+    callback && callback({ ip: query });
   }).catch(() => {
-    
+
   });
 }
 

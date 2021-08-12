@@ -6,7 +6,7 @@ class Config {
     });
   }
   set(params) {
-    this.params = {...this.params, ...params};
+    this.params = { ...this.params, ...params };
   }
   get(param) {
     return this.params[param];

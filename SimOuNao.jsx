@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 class SimOuNao extends Component {
   render() {
-    const {status} = this.props;
+    const { status } = this.props;
     const text = status == 'SIM' ? 'Sim' : 'Não';
     return (
       <small>

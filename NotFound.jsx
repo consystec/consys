@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import notFoundCss from 'consys/notFound.css';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 class NotFound extends Component {
   render() {
-    const { location, history } = this.props; 
+    const { location, history } = this.props;
     return (
       <div className={notFoundCss.notFound}>
         <h5>
           A página
-          <br/>
+          <br />
           <small>{location.pathname}</small>
-          <br/>
+          <br />
           não foi encontrada
-          <br/>
+          <br />
           <a onClick={() => history.goBack()}>clique aqui para voltar ao início</a>
         </h5>
       </div>

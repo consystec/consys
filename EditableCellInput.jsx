@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import {Input, message} from 'antd';
+import { Input } from 'antd';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 
 function renderEditableCellInput(config) {
-  let {thisComponent, listName, propertyName, renderComponent, children, valuePropName} = config;
+  let { thisComponent, listName, propertyName, renderComponent, children, valuePropName } = config;
   if (!renderComponent) {
-    renderComponent = (value) => <span>{value}</span>; 
+    renderComponent = (value) => <span>{value}</span>;
   }
 
   if (!valuePropName) {
@@ -20,29 +20,29 @@ function renderEditableCellInput(config) {
         editable: false,
         value: null
       }
-      
+
       this.getItem = this.getItem.bind(this);
       this.handleChange = this.handleChange.bind(this);
       this.inputRef = this.inputRef.bind(this);
       this.checkEditable = this.checkEditable.bind(this);
     }
     getItem(index) {
-      const list = thisComponent.state[listName]; 
+      const list = thisComponent.state[listName];
       return list[index];
     }
     getValue(item) {
       if (typeof item == 'undefined') {
         return;
       }
-      return propertyName.split('.').reduce((o,i)=>o[i], item);
+      return propertyName.split('.').reduce((o, i) => o[i], item);
     }
     checkEditable() {
-      const {index} = this.props;
+      const { index } = this.props;
       const item = this.getItem(index);
       if (!item) {
         return;
       }
-      const list = thisComponent.state[listName]; 
+      const list = thisComponent.state[listName];
       if (!(this.state.editable !== item.editable)) {
         return false;
       }
@@ -59,13 +59,13 @@ function renderEditableCellInput(config) {
           this.setState({ value: this.value });
         }
       }
-      this.setState({editable: item.editable});
+      this.setState({ editable: item.editable });
     }
     componentDidMount() {
-      const {index} = this.props;
+      const { index } = this.props;
       const item = this.getItem(index);
       this.value = this.getValue(item);
-      this.setState({value: this.value});
+      this.setState({ value: this.value });
       this.checkEditable();
     }
 
@@ -74,8 +74,8 @@ function renderEditableCellInput(config) {
     }
 
     inputRef(input) {
-      const {index} = this.props;
-      const list = thisComponent.state[listName]; 
+      const { index } = this.props;
+      const list = thisComponent.state[listName];
       if (!list[index]) {
         return;
       }
@@ -87,10 +87,10 @@ function renderEditableCellInput(config) {
       }
       let inputs = input.getElementsByTagName('input');
       for (let i = 0; i < inputs.length; ++i) {
-          inputs[i] && inputs[i].focus && inputs[i].focus();
+        inputs[i] && inputs[i].focus && inputs[i].focus();
       }
       list[index].focused = true;
-      thisComponent.setState({[listName]: list});
+      thisComponent.setState({ [listName]: list });
     }
 
     handleChange(value, text) {
@@ -101,16 +101,16 @@ function renderEditableCellInput(config) {
       }
     }
     render() {
-      const { value, editable} = this.state;
+      const { value, editable } = this.state;
       let { children } = this.props;
       if (!children) {
-        children = (<Input size="large"/>);
+        children = (<Input size="large" />);
       }
       const childrenWithProps = React.Children.map(children,
-       (child) => React.cloneElement(child, {
-         [valuePropName]: children.props && children.props.format ? moment(value) : value,
-         onChange: this.handleChange,
-       })
+        (child) => React.cloneElement(child, {
+          [valuePropName]: children.props && children.props.format ? moment(value) : value,
+          onChange: this.handleChange,
+        })
       );
       return (
         <div>
@@ -128,17 +128,17 @@ function renderEditableCellInput(config) {
     }
   }
 
-EditableCellInput.propTypes = {
-  onClose: PropTypes.func,
-  form: PropTypes.object,
-  id: PropTypes.number
-};
+  EditableCellInput.propTypes = {
+    onClose: PropTypes.func,
+    form: PropTypes.object,
+    id: PropTypes.number
+  };
 
   return {
-    render: function(value, record, index) {
+    render: function (value, record, index) {
       return <EditableCellInput index={index}>{children}</EditableCellInput>
     }
   }
 }
 
-export {renderEditableCellInput}
+export { renderEditableCellInput }

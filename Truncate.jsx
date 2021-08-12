@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import utilsCss from 'consys/utils.css';
-import {Tooltip} from 'antd';
+import { Tooltip } from 'antd';
 
 class Truncate extends Component {
   constructor() {
@@ -16,13 +16,13 @@ class Truncate extends Component {
   }
 
   handleSeeMore() {
-    const {viewAll} = this.state;
-    this.setState({viewAll: !viewAll});
+    const { viewAll } = this.state;
+    this.setState({ viewAll: !viewAll });
   }
 
   elementRef(ref) {
     const that = this;
-    const {onTruncate} = this.props;
+    const { onTruncate } = this.props;
 
     this.ref = ref;
 
@@ -30,21 +30,21 @@ class Truncate extends Component {
       clearTimeout(this.timeoutRef);
     }
 
-    this.timeoutRef = setTimeout(function() {
+    this.timeoutRef = setTimeout(function () {
       var node = ReactDOM.findDOMNode(that.ref);
-      
+
       if (!node) {
         return;
       }
-      
+
       let text = '';
-      
+
       if (node.offsetHeight < node.scrollHeight ||
-          node.offsetWidth < node.scrollWidth) {
+        node.offsetWidth < node.scrollWidth) {
         text = node.innerText;
       }
-      
-      that.setState({text});
+
+      that.setState({ text });
       onTruncate && onTruncate(text);
     }, 100);
 
@@ -52,7 +52,7 @@ class Truncate extends Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     const { children } = this.props;
-    
+
     if (this.ref) {
       if (children !== nextProps.children) {
         this.elementRef(this.ref);
@@ -61,19 +61,19 @@ class Truncate extends Component {
   }
 
   render() {
-    const {text, viewAll} = this.state;
+    const { text, viewAll } = this.state;
     const truncClazz = [];
-    var {seeMore, className, style, children, size, tooltip} = this.props;
-    
+    var { seeMore, className, style, children, size, tooltip } = this.props;
+
     if (typeof size !== 'undefined') {
       style = {
         width: size
       }
     }
-    
+
     truncClazz.push(className);
     truncClazz.push('not-draggable');
-    
+
     if (!viewAll) {
       truncClazz.push(utilsCss.truncate);
     }
@@ -86,21 +86,21 @@ class Truncate extends Component {
 
     return (
       <Tooltip title={!viewAll && tooltip ? text : ""}
-        overlayClassName='not-draggable'	
+        overlayClassName='not-draggable'
         placement='top'>
         <div ref={this.elementRef}
-          style={style} 
+          style={style}
           className={truncClazz.join(' ')}>
           {children}
           {viewAll ? button : null}
         </div>
-        {text && seeMore && !viewAll ? 
+        {text && seeMore && !viewAll ?
           <div onClick={this.handleSeeMore}
             className={[utilsCss.absolute, utilsCss.right0, utilsCss.pointer, utilsCss.px1].join(' ')}
-            style={{backgroundColor: '#fff', marginTop: '-1.2rem'}}>
+            style={{ backgroundColor: '#fff', marginTop: '-1.2rem' }}>
             {button}
           </div>
-        : null}
+          : null}
       </Tooltip>
     );
   }

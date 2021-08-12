@@ -9,7 +9,7 @@ export default class RgInput extends Component {
     return (
       <MaskInput {...rest}
         clearValue={(rawValue) => rawValue.replace(/[^\d]/g, '').slice(0, 9)}
-        format={(cleanValue) => (RgPattern.apply(cleanValue) || '').trim().replace(/[^0-9]$/, '')}/>
+        format={(cleanValue) => (RgPattern.apply(cleanValue) || '').trim().replace(/[^0-9]$/, '')} />
     );
   }
 }

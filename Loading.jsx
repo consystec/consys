@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Spin} from 'antd';
+import { Spin } from 'antd';
 import PropTypes from 'prop-types';
 
 class Loading extends Component {
