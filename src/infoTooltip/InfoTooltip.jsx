@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Tooltip } from 'antd';
 import { CalendarOutlined } from '@ant-design/icons';
-import { FormattedDate } from 'react-intl';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import utilsCss from 'consys/utils.css';
 
@@ -14,7 +14,7 @@ class InfoTooltip extends Component {
       if (cadastro) {
         tituloCadastro = (
           <div>
-            Cadastrado em <b><FormattedDate value={this.props.cadastro} /></b>
+            Cadastrado em <b>{moment(this.props.cadastro, 'DD/MM/YYYY')}</b>
           </div>
         )
       }
@@ -22,7 +22,7 @@ class InfoTooltip extends Component {
       if (altera) {
         tituloAltera = (
           <div>
-            Alterado em <b><FormattedDate value={this.props.altera} /></b>
+            Alterado em <b>{moment(this.props.cadastro, 'DD/MM/YYYY')}</b>
           </div>
         )
       }
