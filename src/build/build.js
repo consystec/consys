@@ -36,12 +36,14 @@ module.exports = function (response) {
     version = newVersion + '.' + evoVersion + '.' + bugVersion;
     pack.version = version;
 
-    console.log('Gerando versao: ' + version);
+    console.log('Package alterado para versão: ' + version);
 
-    fs.writeFile(packagePath, JSON.stringify(pack, null, 2), function (err) {
+    fs.writeFileSync(packagePath, JSON.stringify(pack, null, 2), function (err) {
       if (err)
         console.log('erro', err);
     });
+
+    console.log('Gerando versao: ' + version);
   } else {
     console.log('Gerando versao de teste');
   }
