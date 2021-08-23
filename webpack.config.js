@@ -13,6 +13,11 @@ module.exports = function (env) {
         patterns: [
           {
             from: "src/**/*",
+            to:
+              "[name][ext]",
+          },
+          {
+            from: "css/*",
             to: "[name][ext]",
           },
         ],
