@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'antd';
 import PropTypes from 'prop-types';
 import { DndProvider, DragSource, DropTarget } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
 import TableCss from 'consys/table.css';
 import screenSize from 'consys/screenSize';
