@@ -20,6 +20,10 @@ module.exports = function (env) {
             from: "css/*",
             to: "[name][ext]",
           },
+          {
+            from: "package.json",
+            to: "[name][ext]",
+          },
         ],
       }),
     ],

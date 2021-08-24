@@ -7,7 +7,7 @@
     "build": "bash ./deploy.sh",
     "start": "webpack"
   },
-  "author": "suporte@consystec.com.br",
+  "author": "joseantonio_alexandre@hotmail.com",
   "license": "ISC",
   "devDependencies": {
     "copy-webpack-plugin": "^9.0.1",
