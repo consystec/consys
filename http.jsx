@@ -135,20 +135,29 @@ function http(url, options = {}) {
 
           var promise = res.json();
 
+          console.log('Verificar json', res.json());
           return promise.then((result) => {
             if (result == null && options.method != 'POST') {
               throw { message: 'Erro ao carregar a página, tente novamente' };
             }
 
             if (res.ok == false) {
-              if (res.status == 401 || res.status == 408) {
-                message.error(result.message);
-                auth.userChange(null);
+              switch (res.status) {
+                case 401:
+                case 408:
+                  message.error(result.message);
+                  auth.userChange(null);
 
-                if (result.redirect) {
-                  window.location.href = `${result.redirect}`;
-                }
+                  if (result.redirect) {
+                    window.location.href = `${result.redirect}`;
+                  }
+                  
+                  break;
+                case 502:
+                  message.error(result.message);
+                  break;
               }
+
               throw result;
             }
 
