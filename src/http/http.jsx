@@ -135,7 +135,6 @@ function http(url, options = {}) {
 
           var promise = res.json();
 
-          console.log('Verificar json', res.json());
           return promise.then((result) => {
             if (result == null && options.method != 'POST') {
               throw { message: 'Erro ao carregar a página, tente novamente' };
