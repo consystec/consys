@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { AutoComplete, Input, Row, Col, message } from 'antd';
 import { DownOutlined, LoadingOutlined, CloseOutlined } from '@ant-design/icons';
 import ReactDOM from 'react-dom';
-import cryptoJS from 'crypto-js';
 import PropTypes from 'prop-types';
 import { hasLocalStorage } from 'consys/localStorage';
 import http from 'consys/http';
@@ -136,8 +135,7 @@ class InputSearch extends Component {
         var dadosLocalStorage = hasLocalStorage.getItem("GENERETE_INFO_VALUE");
 
         if (dadosLocalStorage != 'undefined' && dadosLocalStorage !== null) {
-          var decryptedBytes = cryptoJS.AES.decrypt(dadosLocalStorage, "CONSYSTEC10");
-          var dados = JSON.parse(decryptedBytes.toString(cryptoJS.enc.Utf8));
+          var dados = JSON.parse(dadosLocalStorage || '[]');
 
           return new Promise((resolve, reject) => {
             if (dados && campos) {
