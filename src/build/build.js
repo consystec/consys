@@ -6,8 +6,14 @@ module.exports = function (response) {
   const config = response.config;
   const pack = response.package;
   const packagePath = response.packagePath;
+  const backendPath = response.packageBackend;
   const versionAction = process.argv[2];
   let version = pack.version.split('.');
+  let backend;
+
+  if (backendPath && fs.existsSync(backendPath)) {
+    backend = JSON.parse(fs.readFileSync(backendPath).toString());
+  }
 
   if (['nova', 'evo', 'bug', 'test'].indexOf(versionAction) < 0) {
     throw 'Versao "' + versionAction + '" nao encontrada';
@@ -35,6 +41,16 @@ module.exports = function (response) {
     }
     version = newVersion + '.' + evoVersion + '.' + bugVersion;
     pack.version = version;
+
+
+    if (backend) {
+      backend.version = version;
+
+      fs.writeFileSync(backendPath, JSON.stringify(backend, null, 2), function (err) {
+        if (err)
+          console.log('erro', err);
+      });
+    }
 
     console.log('Package alterado para versão: ' + version);
 
