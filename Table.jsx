@@ -35,13 +35,13 @@ class _Table extends Component {
   }
 
   render() {
-    const { bordered, className, hover, screenSize } = this.props;
+    const { bordered, className, hover, screenSize, scroll } = this.props;
 
     return (
       <Table {...this.props}
         className={[(hover ? '' : tableCss.table), className].join(' ')}
         bordered={typeof bordered === 'undefined' ? true : bordered}
-        {...(le(screenSize || 'md') ? { scroll: { x: true }, style: { whiteSpace: 'nowrap' } } : null)}
+        {...(le(screenSize || 'md') ? { scroll: { x: scroll || true }, style: { whiteSpace: 'nowrap' } } : null)}
         onChange={this.handleTableChange.bind(this)} />
     );
   }
