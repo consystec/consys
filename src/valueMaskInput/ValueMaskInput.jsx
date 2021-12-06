@@ -80,7 +80,7 @@ class ValueMaskInput extends Component {
     }
 
     if (activeChange && onBlurPure) {
-      onBlurPure(onChangeValue);
+      onBlurPure(onChangeValue, (value) => this.setValue(value));
     }
 
     this.lastValue = onChangeValue;
