@@ -20,7 +20,6 @@ module.exports = function (env) {
             to: "[name][ext]",
             globOptions: {
               dot: true,
-              gitignore: true,
               ignore: ["**/App.*, **/Components.*, **/index.*"],
             },
           },
