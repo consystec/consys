@@ -18,10 +18,6 @@ module.exports = function (env) {
           {
             from: "src/**/*",
             to: "[name][ext]",
-            globOptions: {
-              dot: true,
-              ignore: ["**/App.*, **/Components.*, **/index.*"],
-            },
           },
           {
             from: "css/*",
