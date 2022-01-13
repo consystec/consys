@@ -62,11 +62,13 @@ class CepTypeahead extends Component {
 
   render() {
     const { onSuccess, onFail, ...others } = this.props;
+
     return (
       <CepInput {...others}
         onPressEnter={(e) => this.search(e.target.value, onSuccess, onFail)}
         onBlur={(e) => this.search(e.target.value, onSuccess, onFail)}
-        suffix={this.state.loading ? <LoadingOutlined /> : <span />} />
+        suffix={this.state.loading ? <LoadingOutlined /> : <span />}
+        placeholder='Digite o cep' />
     );
   }
 }
@@ -75,4 +77,5 @@ CepTypeahead.propTypes = {
   onSuccess: PropTypes.func,
   onFail: PropTypes.func
 };
+
 export default CepTypeahead;

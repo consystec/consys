@@ -8,4 +8,5 @@ let favicon = {
     document.getElementsByTagName('head')[0].appendChild(link);
   }
 };
+
 export default favicon;
