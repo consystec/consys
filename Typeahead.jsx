@@ -191,17 +191,6 @@ class Typeahead extends Component {
       showArrow: typeof showArrow === 'undefined' ? true : showArrow,
       erasable: typeof erasable === 'undefined' ? true : erasable
     });
-
-    var node = ReactDOM.findDOMNode(this.autoComplete.current);
-
-    if (!node || node.offsetWidth == 0) {
-      this.setState({
-        style: {
-          width: '100%',
-          minWidth: '200px'
-        }
-      })
-    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
