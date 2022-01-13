@@ -6,8 +6,7 @@ module.exports = function (env) {
     mode: 'production',
     output: {
       path: (env && env.dist) || path.join(__dirname, 'dist'),
-      filename: 'index.js',
-      clean: true
+      filename: 'index.js'
     },
     plugins: [
       new CopyPlugin({
