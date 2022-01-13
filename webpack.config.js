@@ -9,9 +9,6 @@ module.exports = function (env) {
       filename: 'index.js',
       clean: true
     },
-    optimization: {
-      minimize: false
-    },
     plugins: [
       new CopyPlugin({
         patterns: [
