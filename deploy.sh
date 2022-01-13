@@ -13,8 +13,8 @@ mkdir dist
 git worktree prune
 rm -rf .git/worktrees/dist
 
-echo "Checking out dist branch into publish"
-git worktree add -B dist new origin/new
+echo "Checking out dist branch into dist"
+git worktree add -B dist dist origin/dist
 
 echo "Removing existing files"
 rm -rf dist/*
