@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import MaskInput from 'consys/MaskInput';
 import StringMask from 'string-mask';
-const cpfPattern = new StringMask('000-000.00000');
+const cpfPattern = new StringMask('000.000.000-00');
 
 function validateCpf(_, value) {
   return new Promise((resolve, reject) => {
