@@ -13,6 +13,7 @@ class ValueMaskInput extends Component {
     this.handleBlur = this.handleBlur.bind(this);
     this.handleFocus = this.handleFocus.bind(this);
     this.handleEnter = this.handleEnter.bind(this);
+    this.handleRounded = this.handleRounded.bind(this);
   }
 
   setValue(valor, activeChange, nextPrefixMask) {
@@ -34,6 +35,8 @@ class ValueMaskInput extends Component {
     if (typeof valor === 'string' && valor.includes(prefixMask)) {
       valor = this.handleString(valor);
     }
+
+    valor = this.handleRounded(valor);
 
     valor = valor.toString();
 
@@ -100,7 +103,19 @@ class ValueMaskInput extends Component {
 
     val = this.handleString(val);
 
+    val = this.handleRounded(val);
+
     this.setState({ valor: val });
+  }
+
+  handleRounded(value) {
+    const { rounded } = this.props;
+
+    if (rounded) {
+      value = Math.round(value * (Math.pow(10, rounded))) / Math.pow(10, rounded);
+    }
+
+    return value;
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -117,7 +132,7 @@ class ValueMaskInput extends Component {
 
   componentDidMount() {
     const { defaultValue, value } = this.props;
-    this.setState({ valor: defaultValue || value })
+    this.setState({ valor: this.handleRounded(defaultValue || value) })
     this.setValue(defaultValue || value);
   }
 
@@ -126,6 +141,9 @@ class ValueMaskInput extends Component {
 
     if (ev) {
       let valor = ev.target.value;
+
+      valor = this.handleRounded(valor);
+
       valor = valor.replace(',', '.');
 
       this.setState({ valor });
@@ -195,6 +213,7 @@ ValueMaskInput.propTypes = {
   onBlurPure: PropTypes.func,
   prefixMask: PropTypes.string,
   suffixMask: PropTypes.string,
+  rounded: PropTypes.number
 }
 
 export default ValueMaskInput;
