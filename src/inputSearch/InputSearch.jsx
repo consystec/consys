@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { AutoComplete, Input, Row, Col, message } from 'antd';
+import { AutoComplete, Input, Row, Col, message, Form } from 'antd';
 import { DownOutlined, LoadingOutlined, CloseOutlined } from '@ant-design/icons';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { hasLocalStorage } from 'consys/localStorage';
 import http from 'consys/http';
@@ -85,22 +84,22 @@ class InputSearch extends Component {
   }
 
   handleId(event) {
-    const { confirmTab } = this.props;
+    const { confirmTab } = this.state;
     const { id } = this.state;
 
-    if (confirmTab) {
+    if (confirmTab && event) {
       event.preventDefault();
     }
 
     const firstResult = (val) => {
       if (!val) {
         this.handleSelect(val);
-        message.info(`Nenhuma valor encontrado.`);
+        message.info(`Nenhum valor encontrado.`);
       } else if (val && id && (val.codigo == id || val.id == id)) {
         this.handleSelect(val);
       } else if (id) {
         this.handleSelect(null);
-        message.info(`Nenhuma valor encontrado.`);
+        message.info(`Nenhum valor encontrado.`);
       } else {
         this.handleSelect(null);
       }
@@ -155,6 +154,12 @@ class InputSearch extends Component {
               }
 
               if (value && !searchId) {
+                let index = info.map(el => el.codigo.toString()).indexOf(value);
+
+                if (index >= 0) {
+                  resolve([info[index]]);
+                }
+
                 info = info.filter(el => el.descricao.toLowerCase().includes(value.toLowerCase()));
               } else if (value && searchId) {
                 info = info.filter(el => el.codigo.toString() == value);
@@ -222,7 +227,7 @@ class InputSearch extends Component {
             loading: false,
             dataSource: res ? res : []
           });
-        }).catch((e) => {
+        }).catch(() => {
           this.setState({
             loading: false
           });
@@ -258,9 +263,7 @@ class InputSearch extends Component {
       erasable: typeof erasable === 'undefined' ? true : erasable
     });
 
-    var node = ReactDOM.findDOMNode(this.autoComplete.current);
-
-    if (!node || node.offsetWidth == 0) {
+    if (!this.ref) {
       this.setState({
         style: {
           width: '100%',
@@ -309,16 +312,15 @@ class InputSearch extends Component {
     }
 
     this.ref = ref;
-    var node = ReactDOM.findDOMNode(ref);
 
-    if (!node) {
+    if (!ref) {
       return;
     }
 
     if (tempValue !== TYPEAHEAD_NO_VALUE) {
       this.setState({
-        value: node.innerText,
-        validValue: node.innerText,
+        value: ref.innerText,
+        validValue: ref.innerText,
         tempValue: TYPEAHEAD_NO_VALUE
       });
     }
@@ -330,11 +332,23 @@ class InputSearch extends Component {
     }
   }
 
-  keyPress(event) {
-    if (event.which == 9) {
-      if (this.state.id) {
-        this.handleId(event);
-      }
+  keyPress(e) {
+    const char = e.keyCode || e.which;
+
+    switch (char) {
+      case 9:
+        if (this.state.id) {
+          this.handleId(e);
+        }
+        break;
+      case 13:
+        e.preventDefault();
+
+        if (this.state.id) {
+
+          this.handleId(e);
+        }
+        break;
     }
   }
 
@@ -423,16 +437,19 @@ class InputSearch extends Component {
           }
         </span>
         <Row gutter={2}>
-          <Col span={inputCol || 4}>
-            <Input {...props}
-              value={this.state.id || value && value.codigo || null}
-              ref={this.idRef}
-              autoFocus={autoFocus}
-              onChange={({ target: { value } }) => this.setState({ id: value })}
-              onPressEnter={(event) => this.handleId(event)}
-              onKeyDown={(event) => this.keyPress(event)} />
+          <Col sm={inputCol || 4}
+            xs={5}>
+            <Form>
+              <Input {...props}
+                value={this.state.id || value && value.codigo || null}
+                ref={this.idRef}
+                autoFocus={autoFocus}
+                onChange={({ target: { value } }) => this.setState({ id: value })}
+                onKeyDown={(event) => this.keyPress(event)} />
+            </Form>
           </Col>
-          <Col span={colTypeahead ? colTypeahead : span}>
+          <Col sm={colTypeahead ? colTypeahead : span}
+            xs={16}>
             <AutoComplete {...props}
               defaultActiveFirstOption
               ref={this.autoComplete}
@@ -467,10 +484,12 @@ InputSearch.propTypes = {
   onChange: PropTypes.func,
   noEmpty: PropTypes.bool,
   defaultValue: PropTypes.object,
+  defaults: PropTypes.array,
   lookup: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.node
   ]),
+  style: PropTypes.object,
   rowKey: PropTypes.func,
   offline: PropTypes.bool,
   columns: PropTypes.array,
@@ -486,7 +505,14 @@ InputSearch.propTypes = {
   onPressTab: PropTypes.func,
   confirmTab: PropTypes.bool,
   firstResult: PropTypes.func,
-  campos: PropTypes.array
+  campos: PropTypes.array,
+  title: PropTypes.string,
+  autoFocus: PropTypes.bool,
+  inputCol: PropTypes.number,
+  showArrow: PropTypes.any, 
+  erasable: PropTypes.any,
+  value: PropTypes.any,
+  url: PropTypes.string
 };
 
 export default InputSearch;
