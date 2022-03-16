@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Input, Popconfirm, Form, Typography, DatePicker, message, Modal, Button } from 'antd';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 import http from 'consys/http';
 
@@ -19,7 +18,7 @@ const EditableCell = ({
   const normFile = (e) => {
     if (Array.isArray(e)) {
       return e;
-    };
+    }
 
     return e && e.fileList || e.target && e.target[name || 'value'] || e;
   };
@@ -30,7 +29,7 @@ const EditableCell = ({
         <Form.Item name={dataIndex}
           valuePropName={name || 'value'}
           getValueFromEvent={normFile}
-          style={{ margin: 0 }}
+          style={{ margin: 0, padding: 0 }}
           rules={[{
             required: naoObriga ? false : true,
             message: `informação nula`,
@@ -48,9 +47,11 @@ EditableCell.propTypes = {
   dataIndex: PropTypes.string,
   title: PropTypes.string,
   inputType: PropTypes.string,
+  name: PropTypes.string,
   record: PropTypes.any,
   index: PropTypes.number,
   children: PropTypes.node,
+  component: PropTypes.node,
 };
 
 const EditableTable = ({ defaultForm, columns, url, params, editing, callback }) => {
@@ -233,6 +234,8 @@ const EditableTable = ({ defaultForm, columns, url, params, editing, callback })
 EditableTable.propTypes = {
   url: PropTypes.string,
   params: PropTypes.object,
+  defaultForm: PropTypes.object,
+  columns: PropTypes.object,
   editing: PropTypes.func,
   callback: PropTypes.func
 };
