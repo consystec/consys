@@ -3,12 +3,13 @@ import { Button, Checkbox, Col, notification, Row, Upload } from 'antd';
 import { format } from 'date-fns';
 import utilsCss from '../css/utils.css';
 import pkg from '../package.json';
-import Typeahead from './typeahead/Typeahead';
+import Typeahead from './typeahead2/Typeahead';
 import Screen from './screen/Screen';
 import CepTypeahead from './cepTypeahead/CepTypeahead';
 import EditableTable from './editableTable/EditableTable';
 
 const _Typeahead = forwardRef((props, ref) => {
+  
   return (
     <Typeahead {...props}
       url='/url'
@@ -88,10 +89,10 @@ function Components() {
             align='middle'>
             <Col span={24}
               className={utilsCss.h3}>
-              Typeahead
+              Typeahead 2
             </Col>
             <Col span={24}>
-              <_Typeahead />
+              <Typeahead />
             </Col>
           </Row>
         </Col>
