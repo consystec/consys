@@ -113,6 +113,7 @@ ConsysButton.propTypes = {
 	onConfirm: PropTypes.func,
 	children: PropTypes.node,
 	icon: PropTypes.node,
+	noIcon: PropTypes.bool
 };
 
 export default ConsysButton;
