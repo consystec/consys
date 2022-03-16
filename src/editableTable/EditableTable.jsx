@@ -53,7 +53,7 @@ EditableCell.propTypes = {
   children: PropTypes.node,
 };
 
-const EditableTable = ({ columns, url, params, editing, callback }) => {
+const EditableTable = ({ defaultForm, columns, url, params, editing, callback }) => {
   const [data, setData] = useState([]);
   const [deletados, setDeletados] = useState([]);
   const [editingKey, setEditingKey] = useState('');
@@ -125,12 +125,16 @@ const EditableTable = ({ columns, url, params, editing, callback }) => {
   }, [params])
 
   const edit = (record) => {
-    form.setFieldsValue({
-      ...record,
-      datepicker: record.datepicker ? moment(record.datepicker) : null,
-      datepicker2: record.datepicker2 ? moment(record.datepicker2) : null,
-      anexo: []
-    });
+    if (defaultForm) {
+      form.setFieldsValue({
+        ...record,
+        ...defaultForm
+      });
+    } else {
+      form.setFieldsValue({
+        ...record,
+      });
+    }
 
     setIsEditing(true);
     setEditingKey(record.codigo);
