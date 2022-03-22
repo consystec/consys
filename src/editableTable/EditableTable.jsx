@@ -54,7 +54,7 @@ EditableCell.propTypes = {
   component: PropTypes.node,
 };
 
-const EditableTable = ({ defaultForm, columns, url, params, editing, callback }) => {
+const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, callback }) => {
   const [data, setData] = useState([]);
   const [deletados, setDeletados] = useState([]);
   const [editingKey, setEditingKey] = useState('');
@@ -123,13 +123,15 @@ const EditableTable = ({ defaultForm, columns, url, params, editing, callback })
         });
       });
     }
-  }, [params])
+  }, [])
 
   const edit = (record) => {
     if (defaultForm) {
+      const propsForm = defaultForm(record) || {};
+
       form.setFieldsValue({
         ...record,
-        ...defaultForm
+        ...propsForm
       });
     } else {
       form.setFieldsValue({
@@ -218,7 +220,8 @@ const EditableTable = ({ defaultForm, columns, url, params, editing, callback })
         style={{ marginBottom: 16 }}>
         Adiciona Linha
       </Button>
-      <Table components={{ body: { cell: EditableCell } }}
+      <Table {...tableCss} 
+        components={{ body: { cell: EditableCell } }}
         bordered
         dataSource={data}
         size='small'
@@ -234,10 +237,11 @@ const EditableTable = ({ defaultForm, columns, url, params, editing, callback })
 EditableTable.propTypes = {
   url: PropTypes.string,
   params: PropTypes.object,
-  defaultForm: PropTypes.object,
-  columns: PropTypes.object,
+  defaultForm: PropTypes.func,
+  columns: PropTypes.array,
   editing: PropTypes.func,
-  callback: PropTypes.func
+  callback: PropTypes.func,
+  tableCss: PropTypes.object
 };
 
 export default EditableTable;
