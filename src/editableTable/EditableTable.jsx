@@ -32,7 +32,7 @@ const EditableCell = ({
           style={{ margin: 0, padding: 0 }}
           rules={[{
             required: naoObriga ? false : true,
-            message: `informação nula`,
+            message: `Campo obrigatório`,
           }]}>
           {component || inputNode}
         </Form.Item>
@@ -54,7 +54,9 @@ EditableCell.propTypes = {
   component: PropTypes.node,
 };
 
-const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, callback }) => {
+const { Link } = Typography;
+
+const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, callback, onBeforeSave, initialData }) => {
   const [data, setData] = useState([]);
   const [deletados, setDeletados] = useState([]);
   const [editingKey, setEditingKey] = useState('');
@@ -69,26 +71,26 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
 
       return record.codigo === editingKey ? (
         <span>
-          <Typography.Link onClick={() => save(record.codigo)}
+          <Link onClick={() => save(record.codigo)}
             style={{ marginRight: 8 }} >
             Save
-          </Typography.Link>
-          <Popconfirm title="Sure to cancel?"
+          </Link>
+          <Popconfirm title="Deseja cancelar?"
             onConfirm={cancel}>
-            <a>Cancel</a>
+            <a>Cancelar</a>
           </Popconfirm>
         </span>
       ) : (
         <React.Fragment>
-          <Typography.Link disabled={editingKey !== ''}
+          <Link disabled={editingKey !== ''}
             onClick={() => edit(record)}>
             Editar
-          </Typography.Link>&nbsp;&nbsp;&nbsp;
+          </Link>&nbsp;&nbsp;&nbsp;
           <Popconfirm title="Deseja remover?"
             onConfirm={() => deletar(record)}>
-            <Typography.Link disabled={editingKey !== ''}>
+            <Link disabled={editingKey !== ''}>
               Deletar
-            </Typography.Link>
+            </Link>
           </Popconfirm>
         </React.Fragment>
       );
@@ -122,6 +124,8 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
           style: { whiteSpace: 'pre-wrap' }
         });
       });
+    } else if (initialData) {
+      setData(initialData);
     }
   }, [])
 
@@ -170,9 +174,21 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
       const newData = [...data];
       const index = newData.findIndex((item) => codigo === item.codigo);
 
+
       if (index > -1) {
+        let cancel = false;
         const item = newData[index];
         newData.splice(index, 1, { ...item, ...row, update: true });
+
+        onBeforeSave && onBeforeSave(newData[index], (data) => {
+          newData[index] = data;
+          cancel = true;
+        });
+
+        if (cancel) {
+          return;
+        }
+
         setData(newData);
         setEditingKey('');
       } else {
@@ -184,7 +200,7 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
       form.resetFields();
       setIsEditing(false);
     } catch (errInfo) {
-      message.error('Validate Failed: ' + errInfo?.errorFields[0]?.name[0]);
+      message.error('Campo obrigatório: ' + errInfo?.errorFields[0]?.name[0]);
     }
   };
 
@@ -218,9 +234,9 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
       <Button onClick={add}
         type="primary"
         style={{ marginBottom: 16 }}>
-        Adiciona Linha
+        Adicionar Linha
       </Button>
-      <Table {...tableCss} 
+      <Table {...tableCss}
         components={{ body: { cell: EditableCell } }}
         bordered
         dataSource={data}
@@ -241,7 +257,9 @@ EditableTable.propTypes = {
   columns: PropTypes.array,
   editing: PropTypes.func,
   callback: PropTypes.func,
-  tableCss: PropTypes.object
+  onBeforeSave: PropTypes.func,
+  tableCss: PropTypes.object,
+  initialData: PropTypes.any
 };
 
 export default EditableTable;
