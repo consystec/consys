@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Input, Popconfirm, Form, Typography, DatePicker, message, Modal, Button, Upload, Checkbox } from 'antd';
+// import { DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import http from 'consys/http';
 
@@ -29,10 +30,25 @@ const EditableCell = ({ editing, dataIndex, inputType, children, naoObriga,
   switch (inputType) {
     case 'datepicker':
       inputNode = <DatePicker {...inputProps}
-        format='DD/MM/YYYY' />
+        format='DD/MM/YYYY'
+        onChange={e => onChange(new Date(e))} />
       break;
     case 'file':
-      inputNode = <Upload {...inputProps}>{componentChildren}</Upload >
+      if (!row.url) {
+        inputNode = <Upload {...inputProps}>{componentChildren}</Upload>
+      } else {
+        inputNode = (
+          <React.Fragment>
+            <a href={`/anexo/usuario?link=${row.url}`}
+              target='_blank'
+              title={row.anexo}
+              rel="noreferrer">
+              {row.anexo}
+            </a>
+            {/* <DeleteOutlined onClick={() => { onChange(null) }} /> */}
+          </React.Fragment>
+        );
+      }
       break;
     case 'checkbox':
       inputNode = <Checkbox {...inputProps}>{componentChildren}</Checkbox>
@@ -163,7 +179,7 @@ const EditableTable = ({
         params
       }).then((values) => {
         setLoading(false);
-        setData(values);
+        handleDefaultForm(values);
         setCount(values.length);
       }).catch((err) => {
         setLoading(false);
@@ -177,6 +193,14 @@ const EditableTable = ({
       setData(initialData);
     }
   }, [])
+
+  const handleDefaultForm = (values) => {
+    if (defaultForm) {
+      form.setFieldsValue(defaultForm(values));
+    }
+
+    setData(values);
+  }
 
   const edit = (record) => {
     if (defaultForm) {
@@ -288,6 +312,7 @@ const EditableTable = ({
     const nData = [...data];
     const index = find(data, codigo);
 
+    nData[index].update = true;
     nData[index][dataIndex] = value;
 
     setData(nData);
