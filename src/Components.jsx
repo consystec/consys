@@ -1,34 +1,10 @@
-import React, { forwardRef, useState } from 'react';
-import { Button, Checkbox, Col, notification, Row, Upload } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Col, Row, Tag } from 'antd';
 import { format } from 'date-fns';
 import utilsCss from '../css/utils.css';
 import pkg from '../package.json';
-import Typeahead from './typeahead2/Typeahead';
 import Screen from './screen/Screen';
-import CepTypeahead from './cepTypeahead/CepTypeahead';
 import EditableTable from './editableTable/EditableTable';
-
-const _Typeahead = forwardRef((props, ref) => {
-  
-  return (
-    <Typeahead {...props}
-      url='/url'
-      ref={ref}
-      view={item => item && item.codigo + ' - ' + item.descricao} />
-  );
-});
-
-const _CepTypeahead = (props) => {
-  return (
-    <CepTypeahead {...props}
-      onSuccess={(cep) =>
-        notification.success({
-          message: 'Sucesso',
-          description: JSON.stringify(cep)
-        })}
-    />
-  );
-};
 
 const _EditableTable = (props) => {
   const columns = [
@@ -41,22 +17,21 @@ const _EditableTable = (props) => {
     {
       title: 'vencimento',
       dataIndex: 'vencimento',
-      editable: true,
       inputType: 'datepicker',
+      editable: true,
       width: '35%',
       render: (value) => value ? format(new Date(value), 'dd/MM/yyyy') : value
     },
     {
       title: 'anexo',
       dataIndex: 'anexo',
-      editable: true,
       width: '20%',
+      editable: true,
       name: 'fileList',
-      component: <Upload maxCount={1}
-        beforeUpload={() => { return false; }}>
-        <Button>clique aqui</Button>
-      </Upload >,
-      render: (value) => value ? value[0]?.name : ''
+      inputType: 'file',
+      componentProps: { beforeUpload: file => beforeUpload(file) },
+      componentChildren: <Button>Inserir</Button>,
+      render: (value) => value?.[0]?.name || ''
     },
     {
       title: 'checked',
@@ -64,10 +39,16 @@ const _EditableTable = (props) => {
       editable: true,
       width: '20%',
       name: 'checked',
-      component: <Checkbox>checked?</Checkbox>,
-      render: (val) => <Checkbox checked={val}>checked?</Checkbox>
+      componentChildren: 'Clique-me',
+      inputType: 'checkbox',
+      render: el => <Tag color={el ? 'blue' : 'red'}>{el ? 'Sim' : 'Não'}</Tag>
     }
   ];
+
+  const beforeUpload = () => {
+
+    return false;
+  }
 
   return (
     <EditableTable {...props}
@@ -76,37 +57,25 @@ const _EditableTable = (props) => {
 };
 
 function Components() {
+  const [data, setData] = useState([]);
+  const [deletados, setDeletados] = useState([]);
+  const [showData, setShowData] = useState([]);
+
+  useEffect(() => {
+    setShowData(data);
+  }, [data, deletados])
   return (
     <Screen>
       <Row gutter={[10, 10]}
         align='middle'>
         <Col span={24}
           className={[utilsCss.h1, utilsCss.center].join(' ')}>
-          {pkg.name} - {pkg.description} {pkg.dependencies.react}
+          {pkg.name} - {pkg.description} {pkg.dependencies.react.replace('^', '')}
         </Col>
         <Col span={6}>
-          <Row gutter={[10, 10]}
-            align='middle'>
-            <Col span={24}
-              className={utilsCss.h3}>
-              Typeahead 2
-            </Col>
-            <Col span={24}>
-              <Typeahead />
-            </Col>
-          </Row>
-        </Col>
-        <Col span={6}>
-          <Row gutter={[10, 10]}
-            align='middle'>
-            <Col span={24}
-              className={utilsCss.h3}>
-              CepTypeahead
-            </Col>
-            <Col span={24}>
-              <_CepTypeahead autoFocus />
-            </Col>
-          </Row>
+          <Button onClick={() => console.log(showData)}>
+            Mostrar dados
+          </Button>
         </Col>
         <Col span={24}>
           <Row gutter={[10, 10]}
@@ -116,7 +85,10 @@ function Components() {
               EditableTable
             </Col>
             <Col span={24}>
-              <_EditableTable />
+              <_EditableTable
+                noSave
+                callback={({ data, deletados }) => { setData(data); setDeletados(deletados) }}
+              />
             </Col>
           </Row>
         </Col>
