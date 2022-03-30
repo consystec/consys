@@ -1,40 +1,63 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Input, Popconfirm, Form, Typography, DatePicker, message, Modal, Button } from 'antd';
+import { Table, Input, Popconfirm, Form, Typography, DatePicker, message, Modal, Button, Upload, Checkbox } from 'antd';
 import PropTypes from 'prop-types';
 import http from 'consys/http';
 
-const EditableCell = ({
-  editing,
-  dataIndex,
-  inputType,
-  children,
-  naoObriga,
-  component,
-  name,
-  ...restProps
-}) => {
-  const inputNode = inputType === 'datepicker' ? <DatePicker format='DD/MM/YYYY' /> : <Input />;
+const find = (data, rCodigo, codigo) => {
+  const index = data.findIndex(({ codigo }) => codigo === rCodigo);
+
+  if (codigo) {
+    return data[index];
+  }
+
+  return index;
+}
+
+const EditableCell = ({ editing, dataIndex, inputType, children, naoObriga,
+  componentChildren, componentProps, codigo, name, noSave, setData, row, ...restProps }) => {
+  let inputNode;
+  const inputProps = { onChange: e => onChange(normFile(e)), ...componentProps };
 
   const normFile = (e) => {
-    if (Array.isArray(e)) {
+    if (Array.isArray(e) || inputType === 'datepicker') {
       return e;
     }
 
-    return e && e.fileList || e.target && e.target[name || 'value'] || e;
+    return e?.fileList || e?.target?.[name || 'value'];
   };
+
+  switch (inputType) {
+    case 'datepicker':
+      inputNode = <DatePicker {...inputProps}
+        format='DD/MM/YYYY' />
+      break;
+    case 'file':
+      inputNode = <Upload {...inputProps}>{componentChildren}</Upload >
+      break;
+    case 'checkbox':
+      inputNode = <Checkbox {...inputProps}>{componentChildren}</Checkbox>
+      break;
+    default:
+      inputNode = <Input {...inputProps} />
+      break;
+  }
+
+  const onChange = (value) => {
+    setData(value, codigo, dataIndex);
+  }
 
   return (
     <td {...restProps}>
       {editing ? (
-        <Form.Item name={dataIndex}
+        <Form.Item name={!noSave ? dataIndex : dataIndex + row?.codigo}
           valuePropName={name || 'value'}
           getValueFromEvent={normFile}
           style={{ margin: 0, padding: 0 }}
           rules={[{
-            required: naoObriga ? false : true,
+            required: noSave ? false : naoObriga ? false : true,
             message: `Campo obrigatório`,
           }]}>
-          {component || inputNode}
+          {inputNode}
         </Form.Item>
       ) : (children)}
     </td>
@@ -50,24 +73,47 @@ EditableCell.propTypes = {
   name: PropTypes.string,
   record: PropTypes.any,
   index: PropTypes.number,
-  children: PropTypes.node,
+  children: PropTypes.any,
   component: PropTypes.node,
+  componentChildren: PropTypes.node,
+  componentProps: PropTypes.object,
+  codigo: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  row: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.object
+  ]),
+  data: PropTypes.array,
+  noSave: PropTypes.bool,
+  setData: PropTypes.func,
 };
 
 const { Link } = Typography;
 
-const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, callback, onBeforeSave, initialData }) => {
+const EditableTable = ({
+  tableCss, defaultForm, columns, url, params, editing, callback, onBeforeSave, initialData, noSave
+}) => {
   const [data, setData] = useState([]);
   const [deletados, setDeletados] = useState([]);
   const [editingKey, setEditingKey] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(noSave);
   const [count, setCount] = useState(0);
   const [form] = Form.useForm();
   const operation = {
     title: '',
     dataIndex: 'operation',
     render: (_, record) => {
+      if (noSave) {
+        return (
+          <Popconfirm title="Deseja remover?"
+            onConfirm={() => deletar(record)}>
+            <Link>
+              Deletar
+            </Link>
+          </Popconfirm>
+        )
+      }
 
       return record.codigo === editingKey ? (
         <span>
@@ -102,7 +148,10 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
   }, [isEditing])
 
   useEffect(() => {
-    callback && callback({ data, deletados });
+    const time = setTimeout(() => {
+      callback && callback({ data, deletados });
+    }, 300);
+    return () => { clearTimeout(time); };
   }, [deletados, data]);
 
   useEffect(() => {
@@ -172,8 +221,7 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
     try {
       const row = await form.validateFields();
       const newData = [...data];
-      const index = newData.findIndex((item) => codigo === item.codigo);
-
+      const index = find(data, codigo);
 
       if (index > -1) {
         let cancel = false;
@@ -200,7 +248,7 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
       form.resetFields();
       setIsEditing(false);
     } catch (errInfo) {
-      message.error('Campo obrigatório: ' + errInfo?.errorFields[0]?.name[0]);
+      message.error('Campo obrigatório: ' + errInfo?.errorFields?.[0]?.name?.[0]);
     }
   };
 
@@ -210,6 +258,7 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
   }
 
   const mergedColumns = columns.map((col) => {
+    const { componentProps, componentChildren } = col;
     if (!col.editable) {
       return col;
     }
@@ -224,10 +273,25 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
         name: col.name,
         title: col.title,
         component: col.component,
-        editing: record.codigo === editingKey,
+        editing: record.codigo === editingKey || noSave,
+        componentProps,
+        codigo: record.codigo,
+        componentChildren,
+        noSave,
+        row: find(data, record.codigo, true),
+        setData: (val, codigo, dIndex) => setChangeData(val, codigo, dIndex)
       }),
     };
   });
+
+  const setChangeData = (value, codigo, dataIndex) => {
+    const nData = [...data];
+    const index = find(data, codigo);
+
+    nData[index][dataIndex] = value;
+
+    setData(nData);
+  }
 
   return (
     <Form form={form}>
@@ -243,9 +307,8 @@ const EditableTable = ({ tableCss, defaultForm, columns, url, params, editing, c
         size='small'
         rowKey={(values) => values.codigo}
         loading={loading}
-        columns={[...mergedColumns, operation]}
-        pagination={{ onChange: cancel }}
-      />
+        columns={[...mergedColumns, { ...operation }]}
+        pagination={{ onChange: cancel }} />
     </Form>
   );
 };
@@ -259,7 +322,8 @@ EditableTable.propTypes = {
   callback: PropTypes.func,
   onBeforeSave: PropTypes.func,
   tableCss: PropTypes.object,
-  initialData: PropTypes.any
+  initialData: PropTypes.any,
+  noSave: PropTypes.bool,
 };
 
 export default EditableTable;
