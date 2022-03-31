@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Table } from 'antd';
 import PropTypes from 'prop-types';
 import tableCss from 'consys/table.css';
-import { le } from 'consys/screenSize';
 
 class _Table extends Component {
   constructor() {
@@ -10,8 +9,6 @@ class _Table extends Component {
   }
 
   handleTableChange(pagination, filters, sorter) {
-    const pager = { ...this.props.pagination };
-    pager.current = pagination.current;
     var orderBy = [];
 
     if (sorter.field) {
@@ -35,13 +32,13 @@ class _Table extends Component {
   }
 
   render() {
-    const { bordered, className, hover, screenSize, scroll } = this.props;
+    const { bordered, className, hover, scroll } = this.props;
 
     return (
       <Table {...this.props}
         className={[(hover ? '' : tableCss.table), className].join(' ')}
         bordered={typeof bordered === 'undefined' ? true : bordered}
-        {...(le(screenSize || 'md') ? { scroll: { x: scroll || true }, style: { whiteSpace: 'nowrap' } } : null)}
+        style={{ whiteSpace: 'nowrap' }}
         onChange={this.handleTableChange.bind(this)} />
     );
   }
