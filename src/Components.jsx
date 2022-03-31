@@ -76,7 +76,7 @@ function Components() {
               <Table columns={columns}
                 dataSource={data.concat(data.concat(data.concat(data.concat(data))))}
                 pagination={false}
-                scroll={{ x: 600, y: 400 }} />
+                scroll={{ y: 200 }} />
             </Col>
           </Row>
         </Col>
