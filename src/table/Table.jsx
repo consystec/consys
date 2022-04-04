@@ -7,6 +7,23 @@ import { le } from 'consys/screenSize';
 class _Table extends Component {
   constructor() {
     super();
+    this.state = {
+      scrollProps: {
+        scroll: { y: this.state?.scroll?.y }
+      }
+    }
+  }
+
+  componentDidMount() {
+    const { screenSize, scroll } = this.props;
+    if (le(screenSize || 'md')) {
+      this.setState({
+        scrollProps: {
+          scroll: { ...this.state?.scroll, x: scroll || true },
+          style: { whiteSpace: 'nowrap' }
+        }
+      });
+    }
   }
 
   handleTableChange(pagination, filters, sorter) {
@@ -33,28 +50,33 @@ class _Table extends Component {
   }
 
   render() {
-    const { bordered, className, hover, screenSize, scroll } = this.props;
+    const { bordered, className, hover } = this.props;
+    const { scrollProps } = this.state;
 
     return (
-      <Table {...this.props}
+      <Table {...{ ...this.props, ...scrollProps?.scroll, ...scrollProps?.style }}
         className={[(hover ? '' : tableCss.table), className].join(' ')}
         bordered={typeof bordered === 'undefined' ? true : bordered}
-        style={{ whiteSpace: 'nowrap' }}
-        {...(le(screenSize || 'md') ? { scroll: { x: scroll?.x || true }, style: { whiteSpace: 'nowrap' } } : null)}
         onChange={this.handleTableChange.bind(this)} />
     );
   }
 }
+
 
 _Table.propTypes = {
   pagination: PropTypes.oneOfType([
     PropTypes.bool,
     PropTypes.object
   ]),
+  scroll: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.object
+  ]),
   fetch: PropTypes.func,
   className: PropTypes.string,
   hover: PropTypes.bool,
-  screenSize: PropTypes.string
+  screenSize: PropTypes.string,
+  bordered: PropTypes.bool,
 };
 
 export default _Table;
