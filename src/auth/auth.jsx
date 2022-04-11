@@ -43,6 +43,25 @@ const auth = {
         p[key](user);
       }
     }
+  },
+  permis(index, key, permisKey = 'permissoes') {
+    const user = this?.user;
+
+    if (!user) return false;
+
+    if (user.admin) return true;
+
+    if (!Array.isArray(user[permisKey])) return false;
+
+    if (Array.isArray(key)) {
+      key.forEach(el => {
+        if (user[permisKey][index]?.[el]) return true;
+      });
+
+      return false;
+    }
+
+    return user[permisKey][index]?.[key];
   }
 };
 
