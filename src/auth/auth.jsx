@@ -54,9 +54,9 @@ const auth = {
     if (!Array.isArray(user[permisKey])) return false;
 
     if (Array.isArray(key)) {
-      key.forEach(el => {
-        if (user[permisKey][index]?.[el]) return true;
-      });
+      for (let i = 0; i < key.length; i++) {
+        if (user[permisKey][index]?.[key[i]]) return true;
+      }
 
       return false;
     }
