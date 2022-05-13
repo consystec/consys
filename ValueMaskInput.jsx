@@ -193,7 +193,6 @@ class ValueMaskInput extends Component {
       ...rest
     } = this.props;
 
-    console.log('valor: ', valor);
     return (
       <Input {...rest}
         ref={node => this.currency = node}
