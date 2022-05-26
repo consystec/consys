@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { auth } from 'consys';
+import PropTypes from 'prop-types';
 
 function ProtectedRoute({ element, to = '/' }) {
   const [user, setUser] = useState(auth?.user);
@@ -22,5 +23,10 @@ function ProtectedRoute({ element, to = '/' }) {
 
   return (element);
 }
+
+ProtectedRoute.propTypes = {
+  element: PropTypes.node,
+  to: PropTypes.string
+};
 
 export default ProtectedRoute;
