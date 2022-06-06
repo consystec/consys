@@ -166,10 +166,6 @@ import PrivateRoute from './PrivateRoute';
 
 export { PrivateRoute };
 
-import ProtectedRoute from './ProtectedRoute';
-
-export { ProtectedRoute };
-
 import RgInput from './RgInput';
 
 export { RgInput };
