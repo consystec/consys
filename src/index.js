@@ -1,16 +1,13 @@
 export { addressBar } from './addressBar';
 export { ArraySum } from './ArraySum';
-export { AsyncComponent } from './AsyncComponent';
 export { Attach } from './Attach';
 export { auth } from './auth';
 export { build } from './build';
 export { callback } from './callback';
 export { Capitalize } from './Capitalize';
 export { CardItem } from './cardItem';
-export { CardInput } from './cardInput';
 export { CepInput } from './CepInput';
 export { CepTypeahead } from './CepTypeahead';
-export { CheckboxOptions } from './checkbox'
 export { clipboard } from './clipboard';
 export { CnpjInput } from './CnpjInput';
 export { Config } from './Config';
