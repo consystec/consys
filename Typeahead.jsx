@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { AutoComplete, Input, Row, Col } from 'antd';
 import { DownOutlined, LoadingOutlined, CloseOutlined } from '@ant-design/icons';
-import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import http from 'consys/http';
 import style from 'consys/typeahead.css';
@@ -157,7 +156,7 @@ class Typeahead extends Component {
             loading: false,
             dataSource: res ? res : []
           });
-        }).catch((e) => {
+        }).catch(() => {
           this.setState({
             loading: false
           });
@@ -223,21 +222,14 @@ class Typeahead extends Component {
   typeaheadRef(ref) {
     const { tempValue } = this.state;
 
-    if (!ref) {
-      ref = this.ref;
-    }
+    if (ref) this.ref = ref;
 
-    this.ref = ref;
-    var node = ReactDOM.findDOMNode(ref);
-
-    if (!node) {
-      return;
-    }
+    if (!this.ref) return;
 
     if (tempValue !== TYPEAHEAD_NO_VALUE) {
       this.setState({
-        value: node.innerText,
-        validValue: node.innerText,
+        value: this.ref.innerText,
+        validValue: this.ref.innerText,
         tempValue: TYPEAHEAD_NO_VALUE
       });
     }
@@ -294,7 +286,6 @@ class Typeahead extends Component {
     const marginTop = -10;
     var suffix = null;
     var LookupButton = null;
-    var span = lookup != null ? 22 : 24;
     delete props.onChange;
     delete props.defaultValue;
     delete props.setRef;
@@ -333,9 +324,12 @@ class Typeahead extends Component {
             style={{ marginLeft, marginTop }}>
             <CloseOutlined style={{ fontSize: 11 }}
               className={props.disabled && utilsCss.nopointer}
-              onClick={() => {
+              onClick={e => {
+                e.preventDefault();
+                e.stopPropagation();
                 this.handleSelect(null);
-                this.setState({ blured: true, loading: true, dataSource: [] }); this.search('')
+                this.setState({ blured: true, loading: false, dataSource: [] });
+                this.autoComplete.current.blur();
               }
               } />
           </div>
@@ -379,6 +373,7 @@ class Typeahead extends Component {
               onSelect={this.handleSelectAutoComplete}
               onSearch={this.handleSearch}
               onBlur={this.handleBlur}
+              allowClear={true}
               onFocus={this.handleFocus}
               placeholder={placeholder ? placeholder : "Selecione"}
               onKeyDown={this.keyPress}
@@ -423,7 +418,17 @@ Typeahead.propTypes = {
   onPressTab: PropTypes.func,
   confirmTab: PropTypes.bool,
   firstResult: PropTypes.func,
-  idInput: PropTypes.bool
+  idInput: PropTypes.bool,
+  erasable: PropTypes.bool,
+  showArrow: PropTypes.bool,
+  style: PropTypes.object,
+  defaults: PropTypes.array,
+  title: PropTypes.string,
+  url: PropTypes.string,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.object,
+  ]),
 };
 
 export default Typeahead;
