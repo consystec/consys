@@ -1,32 +1,27 @@
-import lessToJs from 'consys/lessToJs';
-import txt from '!raw-loader!antd/lib/style/themes/default.less';
-const palette = lessToJs(txt);
 const sizes = ['xs', 'sm', 'md', 'lg', 'xl'];
-
-function clearValuePallete(value) {
-  return parseInt(palette[value]);
-}
 
 function screenSize() {
   const width = window.innerWidth;
   let size = "";
 
-  if (width >= clearValuePallete("@screen-xl")) {
+  if (width >= 1600) {
+    size = "xxl"
+  } 
+  else if (width >= 1200 && width < 1600) {
     size = "xl";
   }
-  else if (width >= clearValuePallete("@screen-lg") && width < clearValuePallete("@screen-xl")) {
+  else if (width >= 992 && width < 1200) {
     size = "lg";
   }
-  else if (width >= clearValuePallete("@screen-md") && width < clearValuePallete("@screen-lg")) {
+  else if (width >= 768 && width < 992) {
     size = "md";
   }
-  else if (width >= clearValuePallete("@screen-sm") && width < clearValuePallete("@screen-md")) {
+  else if (width >= 576 && width < 768) {
     size = "sm";
   }
   else {
     size = "xs";
   }
-
 
   return size;
 };
@@ -44,7 +39,8 @@ export default screenSize;
 export { ge, le };
 
 // @screen-xl:"1600px"
-// @screen-lg:"1200px"
-// @screen-md:"992px"
-// @screen-sm:"768px"
+// @screen-xl:"1200px"
+// @screen-lg:"992px"
+// @screen-md:"768px"
+// @screen-sm:"576px"
 // @screen-xs:"480px"
