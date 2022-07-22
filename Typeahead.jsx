@@ -373,7 +373,6 @@ class Typeahead extends Component {
               onSelect={this.handleSelectAutoComplete}
               onSearch={this.handleSearch}
               onBlur={this.handleBlur}
-              allowClear={true}
               onFocus={this.handleFocus}
               placeholder={placeholder ? placeholder : "Selecione"}
               onKeyDown={this.keyPress}
