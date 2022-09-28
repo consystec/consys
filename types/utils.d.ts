@@ -1,4 +1,4 @@
-declare module '../css/*.css' {
+declare module '*utils.css' {
 	interface UtilsCss {
 
 		//user-select: none;
