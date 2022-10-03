@@ -379,6 +379,7 @@ class Typeahead extends Component {
               onKeyUp={this.keyUp}>
               <Input ref={this.inputRef}
                 suffix={suffix}
+                spellcheck="false"
                 {...props.autoFocus} />
             </AutoComplete>
           </Col>
