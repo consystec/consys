@@ -22,7 +22,7 @@ function DetailInput({ title, children, extra }) {
 }
 
 DetailInput.propTypes = {
-  title: PropTypes.string,
+  title: PropTypes.node,
   children: PropTypes.node,
   extra: PropTypes.node
 };
