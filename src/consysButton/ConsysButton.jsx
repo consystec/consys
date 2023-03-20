@@ -1,32 +1,45 @@
-import React, { useState, useEffect, Fragment } from 'react';
-import { Button, Popconfirm, Tooltip } from 'antd';
+import React, { useState, useEffect } from 'react';
+import { Button as AntdButton, Popconfirm, Tooltip } from 'antd';
 import {
 	SearchOutlined,
 	DeleteOutlined,
 	PrinterOutlined,
 	FileAddOutlined,
 	EditOutlined,
-	InfoCircleOutlined
+	InfoCircleOutlined,
 } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 
-function _Button({ title, iconState, type, action, children, onClick, ...props }) {
+function Button({ title, type, action, ...props }) {
 	return (
 		<Tooltip title={title}>
-			<Button {...props}
-				icon={iconState}
-				type={type ? type : action === 'delete' ? 'danger' : 'default'}
-				onClick={() => onClick && onClick()}>
-				{children}
-			</Button>
+			<AntdButton {...props}
+				type={type ? type : action === 'delete' ? 'danger' : 'default'} />
 		</Tooltip>
 	);
 }
 
-function ConsysButton({ title, onClick, onConfirm, children,
-	noIcon, icon, action, type, onCancel, popTitle, placement = 'top',
-	okText = 'Ok', cancelText = 'Cancelar', ...props }) {
+Button.propTypes = {
+	title: PropTypes.string,
+	type: PropTypes.string,
+	action: PropTypes.string,
+};
+
+function ConsysButton({
+	onConfirm,
+	noIcon,
+	icon,
+	action,
+	onCancel,
+	popTitle,
+	placement,
+	okText,
+	cancelText,
+	title,
+	...props
+}) {
 	const [iconState, setIconState] = useState(icon);
+	const [buttonTitle, setButtonTitle] = useState('');
 
 	useEffect(() => {
 		if (!icon && !noIcon) {
@@ -48,56 +61,55 @@ function ConsysButton({ title, onClick, onConfirm, children,
 			}
 		}
 
-		switch (action) {
-			case 'consult':
-				title = 'Consultar';
-			case 'delete':
-				title = 'Deletar';
-			case 'print':
-				title = 'Imprimir';
-			case 'new':
-				title = 'Novo';
-			case 'edit':
-				title = 'Editar';
-			default:
-				title = '';
+		if (!title) {
+			switch (action) {
+				case 'consult':
+					setButtonTitle('Consultar');
+					break;
+				case 'delete':
+					setButtonTitle('Deletar');
+					break;
+				case 'print':
+					setButtonTitle('Imprimir');
+					break;
+				case 'new':
+					setButtonTitle('Novo');
+					break;
+				case 'edit':
+					setButtonTitle('Editar');
+					break;
+				default:
+					setButtonTitle('');
+			}
+		} else {
+			setButtonTitle(title);
 		}
 	}, []);
 
 
+	if (!onConfirm) {
+		return (
+			<Button {...props}
+				title={buttonTitle}
+				icon={iconState}
+				action={action} />
+		);
+	}
+
 	return (
-		<Fragment>
-			{onConfirm ? (
-				<Popconfirm title={popTitle}
-					onConfirm={() => onConfirm && onConfirm()}
-					onCancel={() => onCancel && onCancel()}
-					placement={placement}
-					okText={okText}
-					icon={popTitle ? <InfoCircleOutlined /> : null}
-					cancelText={cancelText}>
-					<_Button {...props}
-						title={title}
-						iconState={iconState}
-						type={type}
-						action={action}
-						children={children}
-						onClick={onClick}>
-						{children}
-					</_Button>
-				</Popconfirm  >
-			) : (
-				<_Button {...props}
-					title={title}
-					iconState={iconState}
-					type={type}
-					action={action}
-					children={children}
-					onClick={onClick}>
-					{children}
-				</_Button>
-			)}
-		</Fragment >
-	)
+		<Popconfirm title={popTitle}
+			onConfirm={onConfirm}
+			onCancel={onCancel}
+			placement={placement}
+			okText={okText}
+			cancelText={cancelText}
+			icon={popTitle ? <InfoCircleOutlined /> : null}>
+			<Button {...props}
+				title={buttonTitle}
+				icon={iconState}
+				action={action} />
+		</Popconfirm>
+	);
 }
 
 ConsysButton.propTypes = {
