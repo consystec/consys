@@ -294,6 +294,7 @@ class Typeahead extends Component {
     delete props.confirmTab;
     delete props.firstResult;
     delete props.defaults;
+    delete props.erasable;
 
     if (lookup) {
       if (typeof lookup === 'string') {
