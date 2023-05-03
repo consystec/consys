@@ -294,7 +294,7 @@ class Typeahead extends Component {
     delete props.confirmTab;
     delete props.firstResult;
     delete props.defaults;
-    delete props.size;
+    delete props.erasable;
 
     if (lookup) {
       if (typeof lookup === 'string') {
@@ -380,7 +380,7 @@ class Typeahead extends Component {
               onKeyUp={this.keyUp}>
               <Input ref={this.inputRef}
                 suffix={suffix}
-                spellcheck="false"
+                spellCheck={false}
                 size={size || 'middle'}
                 {...props.autoFocus} />
             </AutoComplete>
