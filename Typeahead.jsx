@@ -279,7 +279,7 @@ class Typeahead extends Component {
   }
 
   render() {
-    const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup, idInput } = this.props;
+    const { rowKey, title, columns, lookup, placeholder, colTypeahead, colLookup, idInput, size } = this.props;
     const { loading, showArrow, erasable, blured, tempValue, value, dataSource } = this.state;
     const props = { ...this.props };
     const marginLeft = -3;
@@ -381,6 +381,7 @@ class Typeahead extends Component {
               <Input ref={this.inputRef}
                 suffix={suffix}
                 spellCheck={false}
+                size={size || 'middle'}
                 {...props.autoFocus} />
             </AutoComplete>
           </Col>
