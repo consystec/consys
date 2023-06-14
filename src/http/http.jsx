@@ -150,7 +150,7 @@ function http(url, options = {}) {
                   if (result.redirect) {
                     window.location.href = `${result.redirect}`;
                   }
-                  
+
                   break;
                 case 502:
                   message.error(result.message);
@@ -161,10 +161,22 @@ function http(url, options = {}) {
             }
 
             return promise;
+          }).catch(e => {
+            if (res.status === 504) {
+              throw new Error('Tempo limite de conexão ao servidor esgotado.');
+            }
+
+            throw e;
           });
         } else {
           return res;
         }
+      }).catch((e) => {
+        if (e?.message?.includes('Failed to fetch')) {
+          throw new Error('Conexão instável da internet ou servidor. Tente novamente.')
+        }
+
+        throw e;
       });
   } catch (e) {
     console.error('Catched error by consys/http', e);
