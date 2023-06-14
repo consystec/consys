@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import auth from 'consys/auth';
 import PropTypes from 'prop-types';
 
@@ -24,7 +24,7 @@ class NoUser extends Component {
     if (this.state.user) {
       const { from } = { from: { pathname: url } };
       return (
-        <Redirect to={from} />
+        <Navigate to={from} />
       );
     }
     return <span></span>;

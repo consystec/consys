@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Tabs, Col, Row } from 'antd';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import style from 'consys/tabs.css';
 import configTab from './configTab';
@@ -83,5 +82,4 @@ _Tabs.propTypes = {
   callback: PropTypes.func
 };
 
-let _TabsRouter = withRouter(_Tabs);
-export default _TabsRouter;
+export default _Tabs;

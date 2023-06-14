@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import notFoundCss from 'consys/notFound.css';
-import { withRouter } from 'react-router-dom';
 
 class NotFound extends Component {
   render() {
@@ -27,6 +26,4 @@ NotFound.propTypes = {
   history: PropTypes.object
 };
 
-
-const NotFoundRouter = withRouter(NotFound);
-export default NotFoundRouter;
+export default NotFound;

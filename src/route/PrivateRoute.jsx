@@ -1,42 +1,35 @@
-import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import auth from 'consys/auth';
-import Config from 'consys/Config';
+import React, { useEffect, useState } from 'react';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
+import { auth } from 'consys';
 import PropTypes from 'prop-types';
 
-class PrivateRoute extends Component {
-  constructor() {
-    super();
-    this.state = {
-      user: auth.user
-    };
-  }
-  componentDidMount() {
-    var that = this;
-    this.onUserChange = auth.onUserChange((user) => {
-      that.setState({ user });
+
+function ProtectedRoute({ to = '/' }) {
+  const [user, setUser] = useState(auth?.user);
+  const prevRoute = useLocation();
+
+  useEffect(() => {
+    const onUserChange = auth.onUserChange((nUser) => {
+      setUser(nUser);
     });
+
+    return () => auth.removeUserChange(onUserChange);
+  }, [])
+
+  if (!user) {
+    return (
+      <Navigate to={to}
+        state={{ prevRoute }}
+        replace />
+    );
   }
-  componentWillUnmount() {
-    auth.removeUserChange(this.onUserChange);
-  }
-  render() {
-    if (!this.state.user) {
-      return (
-        <Redirect to={{
-          pathname: Config.get('loginUrl'),
-          state: { from: this.props.location }
-        }} />
-      );
-    }
-    return (<Route {...this.props} />);
-  }
+
+  return <Outlet />;
 }
 
-PrivateRoute.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }),
+ProtectedRoute.propTypes = {
+  element: PropTypes.node,
+  to: PropTypes.string
 };
 
-export default PrivateRoute;
+export default ProtectedRoute;
