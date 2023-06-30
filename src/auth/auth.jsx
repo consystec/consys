@@ -62,6 +62,33 @@ const auth = {
     }
 
     return user[permisKey][index]?.[key];
+  },
+  permisById(id, key, chave = 'permissoes', prop = 'sequen') {
+    const user = this?.user;
+
+    if (!user) return false;
+
+    if (user.admin) return true;
+
+    if (!Array.isArray(user[chave])) return false;
+
+    const indexOf = user[chave].findIndex(el => el[prop] === id);
+
+    if (indexOf < 0) {
+      return false;
+    }
+
+    const permissao = user[chave][indexOf];
+
+    if (!Array.isArray(key)) {
+      return permissao[key];
+    }
+
+    for (let i = 0; i < key.length; i++) {
+      if (permissao[key[i]]) return true;
+    }
+
+    return false;
   }
 };
 
