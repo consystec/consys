@@ -63,7 +63,7 @@ const auth = {
 
     return user[permisKey][index]?.[key];
   },
-  permisById(id, key, chave = 'permissoes', prop = 'sequen') {
+  permisById(id, key, chave = 'permissoes', prop = 'codigo') {
     const user = this?.user;
 
     if (!user) return false;
