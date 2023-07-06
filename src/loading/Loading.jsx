@@ -1,17 +1,18 @@
-import React, { Component } from 'react';
-import { Spin } from 'antd';
+import React from 'react';
 import PropTypes from 'prop-types';
+import { Spin } from 'antd';
 
-class Loading extends Component {
-  render() {
-    return (
-      <Spin {...this.props}  >{this.props.children}</Spin>
-    );
-  }
+function Loading({ loading, spinning, ...props }) {
+
+  return (
+    <Spin {...props}
+      spinning={spinning || loading} />
+  );
 }
 
 Loading.propTypes = {
-  children: PropTypes.node,
+  spinning: PropTypes.bool,
+  loading: PropTypes.bool,
 };
 
 export default Loading;
