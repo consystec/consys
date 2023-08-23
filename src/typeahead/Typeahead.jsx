@@ -227,10 +227,17 @@ class Typeahead extends Component {
     if (!this.ref) return;
 
     if (tempValue !== TYPEAHEAD_NO_VALUE) {
+      const { selectedView } = this.props;
+      let value = this.ref.innerText;
+
+      if (typeof selectedView === 'function') {
+        value = selectedView(this.ref.innerText);
+      }
+
       this.setState({
-        value: this.ref.innerText,
-        validValue: this.ref.innerText,
-        tempValue: TYPEAHEAD_NO_VALUE
+        value,
+        validValue: value,
+        tempValue: TYPEAHEAD_NO_VALUE,
       });
     }
   }
@@ -427,6 +434,8 @@ Typeahead.propTypes = {
   defaults: PropTypes.array,
   title: PropTypes.string,
   url: PropTypes.string,
+  size: PropTypes.number,
+  selectedView: PropTypes.func,
   value: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.object,
