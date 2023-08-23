@@ -6,7 +6,7 @@ function Loading({ loading, spinning, ...props }) {
 
   return (
     <Spin {...props}
-      spinning={spinning || loading} />
+      spinning={spinning || loading || false} />
   );
 }
 
