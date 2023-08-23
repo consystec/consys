@@ -1,7 +1,0 @@
-.tabs :global .ant-tabs-bar {
-  border: transparent !important;
-}
-
-.tabs :global .ant-tabs-bar .ant-tabs-tab {
-  border: transparent !important;
-}
