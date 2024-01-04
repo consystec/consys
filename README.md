@@ -1,5 +1,4 @@
-# Deprecated 
-## Suppressed by consys-ui 
+# Deprecated - Suppressed by consys-ui 
 
 # Deploy
 
