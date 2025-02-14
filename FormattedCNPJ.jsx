@@ -7,7 +7,7 @@ class FormattedCNPJ extends Component {
     delete rest.mask;
     return (
       <FormattedMask {...rest}
-        mask="00.000.000/0000-00" />
+        mask="AA.AAA.AAA/AAAA-AA" />
     );
   }
 }
