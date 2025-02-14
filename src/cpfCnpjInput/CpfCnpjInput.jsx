@@ -1,17 +1,11 @@
 import React from 'react';
 import MaskInput from 'consys/MaskInput';
-import StringMask from 'string-mask';
 import PropTypes from 'prop-types';
-
-const cnpjPattern = new StringMask('00.000.000\/0000-00');
-const cpfPattern = new StringMask('000.000.000-00');
 
 const CpfCnpjInput = React.forwardRef(({ format, clearValue, type, ...rest }, ref) => {
   let size = type && type.toUpperCase() == 'CPF' ? 11 : 14;
 
   const formatInput = cleanValue => {
-    var formatedValue;
-
     if (typeof cleanValue == 'undefined'
       || cleanValue == 'null'
       || cleanValue == null
@@ -19,28 +13,29 @@ const CpfCnpjInput = React.forwardRef(({ format, clearValue, type, ...rest }, re
       return;
     }
 
-    if (type) {
-      if (type.toUpperCase() == 'CNPJ') {
-        formatedValue = cnpjPattern.apply(cleanValue);
-      }
-      if (type.toUpperCase() == 'CPF') {
-        formatedValue = cpfPattern.apply(cleanValue) || '';
-      }
+    if (isCnpj(cleanValue)) {
+      return cleanValue?.toUpperCase().trim().slice(0, 14).replace(/(.{2})(.{3})(.{3})(.{4})(.{2})/, '$1.$2.$3/$4-$5');
     } else {
-      if (cleanValue.length > 11) {
-        formatedValue = cnpjPattern.apply(cleanValue);
-      } else {
-        formatedValue = cpfPattern.apply(cleanValue) || '';
-      }
+      return cleanValue?.toUpperCase().trim().replace(/(.{3})(.{3})(.{3})(.{2})/, '$1.$2.$3-$4');
     }
+  }
 
-    return formatedValue.trim().replace(/[^0-9]$/, '');
+  const limpaValor = rawValue => {
+    if (isCnpj(rawValue)) {
+      return rawValue?.toString().replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, 14);
+    } else {
+      return rawValue?.toString().replace(/[^a-zA-Z0-9]/g, '').toUpperCase().slice(0, size);
+    }
+  }
+
+  const isCnpj = (value) => {
+    return type && type.toUpperCase() == 'CNPJ' || value?.length > 11;
   }
 
   return (
     <MaskInput {...rest}
       ref={ref}
-      clearValue={rawValue => rawValue && rawValue.replace(/[^\d]/g, '').slice(0, size)}
+      clearValue={rawValue => limpaValor(rawValue)}
       format={cleanValue => formatInput(cleanValue)} />
   );
 });
