@@ -180,5 +180,5 @@ npm start -- --env.dist=C:\Projetos\"projeto"\frontend\node_modules\consys
 ### uuid
 - função que gera um ID/UUID/UID aleatório e não repetível
 
-### xml
+### xml (deprecated)
 - converte um XML para JSON e um JSON para XML
